@@ -1,12 +1,12 @@
-
-<ul>
-  <li>postawic backend - spring</li>
-  <li>struktura danych - najpierw kategoria, potem pytania</li>
-  <li>widok kategorii</li>
-  <li>widok pytania</li>
-  <li>zmiana kolejnosci pytan (property order)</li>
-  <li>drag n drop</li>
-  <li>system punktacji i zliczania dobrych i zlych odp</li>
-  <li>subchapters</li>
-  <li>wyroznione pytania np 5 pierwszych, nad ktorymi pracuje aktualnie</li>
-</ul>
+<mat-drawer-container class="main-container">
+  <mat-drawer mode="side" opened class="main-nav">
+    <mat-list role="list">
+    @for (item of navItems; track $index) {
+      <mat-list-item (click)="navigate(item.url)">{{ item.name }}</mat-list-item>
+    }
+  </mat-list>
+  </mat-drawer>
+  <mat-drawer-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

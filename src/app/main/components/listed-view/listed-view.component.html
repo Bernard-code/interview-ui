@@ -1,0 +1,6 @@
+<button mat-raised-button (click)="openEditModal()">+</button>
+<div class="categories-container">
+  @for (item of items; track item.id) {
+    <div class="category" (click)="navigate(item.id)">{{ item.name }}</div>
+  }
+</div>

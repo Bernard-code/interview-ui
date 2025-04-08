@@ -1,0 +1,23 @@
+<form [formGroup]="categoryForm" class="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Category name</mat-label>
+    <input
+      formControlName="name"
+      matInput
+      placeholder="Name"
+    >
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Position</mat-label>
+    <input
+      formControlName="position"
+      matInput
+      placeholder="Position"
+    >
+  </mat-form-field>
+  <button
+    (click)="submitCategory()"
+    type="button"
+    mat-button
+  >Submit</button>
+</form>

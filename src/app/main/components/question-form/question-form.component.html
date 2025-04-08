@@ -1,0 +1,42 @@
+<form [formGroup]="questionForm" class="form">
+  <mat-form-field appearance="outline">
+    <mat-label>Category name</mat-label>
+    <input
+      formControlName="name"
+      matInput
+      placeholder="Name"
+    >
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Answer</mat-label>
+    <textarea
+      formControlName="answer"
+      matInput
+      placeholder="Answer"
+    ></textarea>
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Position</mat-label>
+    <input
+      formControlName="position"
+      matInput
+      placeholder="Position"
+    >
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Category</mat-label>
+    <mat-select
+      formControlName="category"
+      placeholder="Category"
+    >
+      @for (category of categories; track category.id){
+        <mat-option [value]="category.id">{{category.name}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+  <button
+    (click)="submitQuestion()"
+    type="button"
+    mat-button
+  >Submit</button>
+</form>
