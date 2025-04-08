@@ -34,11 +34,12 @@ export class ListedViewComponent implements OnInit {
   public ngOnInit(): void {
     this.categoryId = this.activatedRoute.snapshot.params['id'];
     this.presentationItem = this.activatedRoute.snapshot.params['item'];
+    console.log("=>37 presentationItem", this.presentationItem);
 
     this.loadItems().subscribe();
   }
 
-  public loadItems(): Observable<Category[]> {
+  public loadItems(): Observable<ListItem[]> {
     const itemsToLoad = this.presentationItem === PresentationItem.Question
       ? this.mainService.getQuestions()
       : this.mainService.getCategories();
@@ -46,7 +47,7 @@ export class ListedViewComponent implements OnInit {
       tap((listItems: ListItem[]) => {
         let questions: ListItem[] = listItems;
         if (this.presentationItem === PresentationItem.Question) {
-          questions = (listItems as Question[]).filter((item: Question) => item.category === this.categoryId);
+          questions = (listItems as Question[]).filter((item: Question) => item.category !== this.categoryId);
         }
         this.items = questions.sort((a, b) => a.position - b.position);
       }),
@@ -60,16 +61,23 @@ export class ListedViewComponent implements OnInit {
       : this.matDialog.open(CategoryFormComponent, { width: '400px' });
     modal
       .afterClosed().pipe(
-      filter(Boolean),
-      switchMap((categoryData: Category) =>
-        this.mainService.createCategory(categoryData)
-      ),
-      switchMap(() => this.loadItems()),
-      takeUntilDestroyed(this.destroyRef)
-    ).subscribe();
+        filter(Boolean),
+        switchMap((data: Question | Category) => {
+          return this.presentationItem === PresentationItem.Question
+            ? this.mainService.createQuestion(data as Question)
+            : this.mainService.createCategory(data as Category);
+        }),
+        switchMap(() => this.loadItems()),
+        takeUntilDestroyed(this.destroyRef)
+      ).subscribe();
   }
 
-  public navigate(categoryId: number): void {
-    this.router.navigate(['/category', categoryId]);
+  public navigate(id: number): void {
+    if (this.presentationItem === PresentationItem.Category) {
+      console.log("=>(listed-view.component.ts:74) ", );
+      this.router.navigate([`/categories/${PresentationItem.Question}/${id}`]);
+    } else {
+      this.router.navigate([`/question/${id}`]);
+    }
   }
 }

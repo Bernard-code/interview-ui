@@ -9,7 +9,7 @@ export const routes: Routes = [
     children: [
       { path: 'todo', component: ToDoComponent },
       { path: 'categories/:item', component: ListedViewComponent },
-      { path: 'category/:item/:id', component: ListedViewComponent },
+      { path: 'categories/:item/:id', component: ListedViewComponent },
       { path: 'question/:id', component: QuestionCardComponent },
     ]
   },

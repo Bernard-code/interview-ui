@@ -1,4 +1,4 @@
 export enum PresentationItem {
-  Category,
-  Question,
+  Category = 'category',
+  Question = 'question',
 }
