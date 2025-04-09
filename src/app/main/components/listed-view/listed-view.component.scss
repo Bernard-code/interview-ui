@@ -4,22 +4,41 @@
 }
 .create-btn {
   margin: 10px;
+
+  .mat-icon {
+    margin: 0;
+  }
 }
+
+.delete-btn {
+  margin: 10px 10px 0;
+
+  .mat-icon {
+    color: #ff9595;
+    margin: 0;
+  }
+}
+
 .categories-container {
   display: flex;
   flex-direction: column;
 
   .category {
-    margin: 10px;
+    margin: 10px 10px 0;
     padding: 10px;
     border: 1px solid lightgray;
     border-radius: 4px;
-    width: auto;
     transition: background .3s ease;
+    width: 99%;
 
     &:hover {
       background-color: #ededed;
       cursor: pointer;
     }
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
   }
 }

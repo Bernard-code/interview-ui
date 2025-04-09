@@ -1,0 +1,19 @@
+.container {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+
+  .message {
+    padding: 0 10px;
+  }
+
+  .btn-box {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .confirm-btn {
+    background: #ff9595;
+    color: #fff;
+  }
+}

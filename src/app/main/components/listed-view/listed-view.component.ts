@@ -11,6 +11,8 @@ import { PresentationItem } from '../../model/presentation-item.model';
 import { ListItem } from '../../model/list-item.model';
 import { QuestionFormComponent } from '../question-form/question-form.component';
 import { Question } from '../../model/question.model';
+import { MatIconModule } from '@angular/material/icon';
+import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 
 @Component({
   selector: 'app-listed-view',
@@ -18,6 +20,7 @@ import { Question } from '../../model/question.model';
   styleUrl: './listed-view.component.scss',
   imports: [
     MatButtonModule,
+    MatIconModule,
   ],
 })
 export class ListedViewComponent implements OnInit {
@@ -34,7 +37,6 @@ export class ListedViewComponent implements OnInit {
   public ngOnInit(): void {
     this.categoryId = this.activatedRoute.snapshot.params['id'];
     this.presentationItem = this.activatedRoute.snapshot.params['item'];
-    console.log("=>37 presentationItem", this.presentationItem);
 
     this.loadItems().subscribe();
   }
@@ -57,7 +59,7 @@ export class ListedViewComponent implements OnInit {
 
   public openEditModal(): void {
     const modal = this.presentationItem === PresentationItem.Question
-      ? this.matDialog.open(QuestionFormComponent, { width: '400px' })
+      ? this.matDialog.open(QuestionFormComponent, { width: '800px' })
       : this.matDialog.open(CategoryFormComponent, { width: '400px' });
     modal
       .afterClosed().pipe(
@@ -74,10 +76,24 @@ export class ListedViewComponent implements OnInit {
 
   public navigate(id: number): void {
     if (this.presentationItem === PresentationItem.Category) {
-      console.log("=>(listed-view.component.ts:74) ", );
       this.router.navigate([`/categories/${PresentationItem.Question}/${id}`]);
     } else {
       this.router.navigate([`/question/${id}`]);
     }
   }
+
+  public deleteItem(id: number, name: string): void {
+    this.matDialog.open(DeleteConfirmComponent, { width: '400px', data: {name}})
+      .afterClosed().pipe(
+          filter(Boolean),
+          switchMap(() => {
+            return this.presentationItem === PresentationItem.Question
+              ? this.mainService.deleteQuestion(id)
+              : this.mainService.deleteCategory(id);
+          }),
+          switchMap(() => this.loadItems()),
+          takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
+  }
+
 }

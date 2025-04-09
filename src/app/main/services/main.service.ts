@@ -19,11 +19,27 @@ export class MainService {
     return this.http.post<Category>(`${this.baseUrl}/categories`, category);
   }
 
+  public editCategory(categoryId: number, category: Category): Observable<Category> {
+    return this.http.put<Category>(`${this.baseUrl}/categories/${categoryId}`, category);
+  }
+
+  public deleteCategory(categoryId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/categories/${categoryId}`);
+  }
+
   public getQuestions(): Observable<Question[]> {
     return this.http.get<Question[]>(`${this.baseUrl}/questions`);
   }
 
   public createQuestion(question: Question): Observable<Question> {
     return this.http.post<Question>(`${this.baseUrl}/questions`, question);
+  }
+
+  public editQuestion(questionId: number, question: Question): Observable<Question> {
+    return this.http.put<Question>(`${this.baseUrl}/questions/${questionId}`, question);
+  }
+
+  public deleteQuestion(questionId: number): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/categories/${questionId}`);
   }
 }
