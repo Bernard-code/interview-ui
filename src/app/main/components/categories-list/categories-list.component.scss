@@ -1,0 +1,46 @@
+.main-container {
+  height: 100vh;
+
+  .main-nav {
+    background: #e7ebff;
+    width: 250px;
+    border-radius: 0;
+  }
+}
+
+.main-content {
+  background: #fff;
+}
+
+.title {
+  margin: 10px;
+}
+
+.delete-btn {
+  color: #000;
+  font-size: 20px;
+  transition: color .3s ease;
+  padding: 0 10px;
+
+  &:hover {
+    color: #ae0000;
+    cursor: pointer;
+  }
+}
+
+.category {
+  transition: color .3s ease;
+  width: 99%;
+
+  &:hover {
+    color: #1375fb;
+    cursor: pointer;
+  }
+}
+
+.category-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}

@@ -1,0 +1,19 @@
+<mat-drawer-container class="main-container">
+  <mat-drawer mode="side" opened class="main-nav">
+    <h3 class="title">Questions</h3>
+    <mat-list role="list">
+      @for (question of questions; track question.id) {
+        <mat-list-item>
+          <div class="row">
+            <div class="category" (click)="openQuestion(question.id)">{{ question.name }}</div>
+            <button mat-raised-button class="btn edit-btn" (click)="openEditModal(question.id)"><mat-icon>edit</mat-icon></button>
+            <button mat-raised-button class="btn delete-btn" (click)="deleteItem(question.id, question.name)"><mat-icon>delete</mat-icon></button>
+          </div>
+        </mat-list-item>
+      }
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

@@ -22,7 +22,7 @@ export class MainScreenComponent {
 
   public navItems = [
     {name: 'ToDo', url: '/todo'},
-    {name: 'Questions', url: `/categories/${PresentationItem.Category}`},
+    {name: 'Questions', url: `/categories`},
   ];
 
   public navigate(url: string): void {
