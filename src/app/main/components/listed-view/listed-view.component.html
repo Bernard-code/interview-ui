@@ -4,10 +4,11 @@
   @for (item of items; track item.id) {
     <div class="row">
       <div class="category" (click)="navigate(item.id)">{{ item.name }}</div>
-      <button mat-raised-button class="delete-btn" (click)="deleteItem(item.id, item.name)"><mat-icon>delete</mat-icon></button>
+      <button mat-raised-button class="btn edit-btn" (click)="openEditModal(item.id)"><mat-icon>edit</mat-icon></button>
+      <button mat-raised-button class="btn delete-btn" (click)="deleteItem(item.id, item.name)"><mat-icon>delete</mat-icon></button>
     </div>
   }
-// TODO: dodac kategorie pusta
+<!-- TODO: dodac kategorie pusta-->
 <!--  @if (presentationItem === PresentationItem.Category) {-->
 <!--    <div class="row">-->
 <!--      <div class="category" (click)="navigate(null)">Empty category</div>-->

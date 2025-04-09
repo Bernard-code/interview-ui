@@ -13,6 +13,7 @@ import { QuestionFormComponent } from '../question-form/question-form.component'
 import { Question } from '../../model/question.model';
 import { MatIconModule } from '@angular/material/icon';
 import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
+import { isNil } from '../../utils/is-nil.util';
 
 @Component({
   selector: 'app-listed-view',
@@ -59,21 +60,21 @@ export class ListedViewComponent implements OnInit {
     );
   }
 
-  public openEditModal(): void {
+  public openEditModal(id?: number): void {
     const modal = this.presentationItem === PresentationItem.Question
-      ? this.matDialog.open(QuestionFormComponent, { width: '800px' })
-      : this.matDialog.open(CategoryFormComponent, { width: '400px' });
+      ? this.matDialog.open(QuestionFormComponent, { width: '800px', data: { id } })
+      : this.matDialog.open(CategoryFormComponent, { width: '400px', data: { id } });
     modal
       .afterClosed().pipe(
-        filter(Boolean),
-        switchMap((data: Question | Category) => {
-          return this.presentationItem === PresentationItem.Question
-            ? this.mainService.createQuestion(data as Question)
-            : this.mainService.createCategory(data as Category);
-        }),
-        switchMap(() => this.loadItems()),
-        takeUntilDestroyed(this.destroyRef)
-      ).subscribe();
+      filter(Boolean),
+      switchMap((data: Question | Category) => {
+        return this.presentationItem === PresentationItem.Question
+          ? this.mainService.createQuestion(data as Question)
+          : this.mainService.createCategory(data as Category);
+      }),
+      switchMap(() => this.loadItems()),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe();
   }
 
   public navigate(id: number): void {
@@ -85,18 +86,17 @@ export class ListedViewComponent implements OnInit {
   }
 
   public deleteItem(id: number, name: string): void {
-    this.matDialog.open(DeleteConfirmComponent, { width: '400px', data: {name}})
+    this.matDialog.open(DeleteConfirmComponent, { width: '400px', data: { name } })
       .afterClosed().pipe(
-          filter(Boolean),
-          switchMap(() =>
-            this.presentationItem === PresentationItem.Question
-              ? this.mainService.deleteQuestion(id)
-              : this.mainService.deleteCategory(id)
-          ),
-          switchMap(() => this.loadItems()),
-          takeUntilDestroyed(this.destroyRef),
+      filter(Boolean),
+      switchMap(() =>
+        this.presentationItem === PresentationItem.Question
+          ? this.mainService.deleteQuestion(id)
+          : this.mainService.deleteCategory(id)
+      ),
+      switchMap(() => this.loadItems()),
+      takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 
-  protected readonly PresentationItem = PresentationItem;
 }

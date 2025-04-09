@@ -15,6 +15,10 @@ export class MainService {
     return this.http.get<Category[]>(`${this.baseUrl}/categories`);
   }
 
+  public getCategoryById(categoryId: number): Observable<Category> {
+    return this.http.get<Category>(`${this.baseUrl}/categories/${categoryId}`);
+  }
+
   public createCategory(category: Category): Observable<Category> {
     return this.http.post<Category>(`${this.baseUrl}/categories`, category);
   }
@@ -29,6 +33,10 @@ export class MainService {
 
   public getQuestions(): Observable<Question[]> {
     return this.http.get<Question[]>(`${this.baseUrl}/questions`);
+  }
+
+  public getQuestionById(questionId: number): Observable<Question> {
+    return this.http.get<Question>(`${this.baseUrl}/questions/${questionId}`);
   }
 
   public createQuestion(question: Question): Observable<Question> {
