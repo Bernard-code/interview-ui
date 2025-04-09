@@ -1,14 +1,14 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { Category, CategoryForm } from '../../model/category.model';
 import { Observable, tap } from 'rxjs';
 import { isNil } from '../../utils/is-nil.util';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MainService } from '../../services/main.service';
+import { EditModalBase } from '../../utils/edit-modal.base';
 
 @Component({
   selector: 'app-category-form',
@@ -21,17 +21,15 @@ import { MainService } from '../../services/main.service';
     MatButtonModule,
   ],
 })
-export class CategoryFormComponent implements OnInit {
-  private dialogData = inject(MAT_DIALOG_DATA);
+export class CategoryFormComponent extends EditModalBase implements OnInit {
   private dialogRef: MatDialogRef<CategoryFormComponent> = inject(MatDialogRef);
-  private mainService = inject(MainService);
+
   public categoryForm: FormGroup<CategoryForm>;
-  private destroyRef = inject(DestroyRef);
 
   public ngOnInit(): void {
     this.categoryForm = new FormGroup({
-      name: new FormControl(''),
-      position: new FormControl(),
+      name: new FormControl<string>(''),
+      position: new FormControl<number>(null),
     });
     this.fillEditForm().subscribe();
   }
@@ -48,7 +46,7 @@ export class CategoryFormComponent implements OnInit {
     );
   }
 
-  public submitCategory(): void {
+  public submitForm(): void {
     this.dialogRef.close(this.categoryForm.value);
   }
 }

@@ -2,7 +2,9 @@
   <mat-drawer mode="side" opened class="main-nav">
     <mat-list role="list">
     @for (item of navItems; track $index) {
-      <mat-list-item (click)="navigate(item.url)">{{ item.name }}</mat-list-item>
+      <mat-list-item class="list-item" (click)="navigate(item.url)">
+        <span class="nav-item">{{ item.name }}</span>
+      </mat-list-item>
     }
   </mat-list>
   </mat-drawer>

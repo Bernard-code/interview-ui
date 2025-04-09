@@ -3,11 +3,15 @@
     <h3 class="title">Questions</h3>
     <mat-list role="list">
       @for (question of questions; track question.id) {
-        <mat-list-item>
-          <div class="row">
-            <div class="category" (click)="openQuestion(question.id)">{{ question.name }}</div>
-            <button mat-raised-button class="btn edit-btn" (click)="openEditModal(question.id)"><mat-icon>edit</mat-icon></button>
-            <button mat-raised-button class="btn delete-btn" (click)="deleteItem(question.id, question.name)"><mat-icon>delete</mat-icon></button>
+        <mat-list-item class="list-item">
+          <div class="category-row">
+            <div
+                class="category"
+                (click)="openQuestion(question.id)"
+                (dblclick)="openEditModal(question.id)"
+            >{{ question.name }}
+            </div>
+            <mat-icon class="delete-btn" (click)="deleteItem(question.id, question.name)">close</mat-icon>
           </div>
         </mat-list-item>
       }

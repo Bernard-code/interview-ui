@@ -1,16 +1,16 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { Question, QuestionForm } from '../../model/question.model';
 import { Category } from '../../model/category.model';
-import { MainService } from '../../services/main.service';
 import { Observable, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatSelectModule } from '@angular/material/select';
 import { isNil } from '../../utils/is-nil.util';
+import { EditModalBase } from '../../utils/edit-modal.base';
 
 @Component({
   selector: 'app-question-form',
@@ -24,11 +24,8 @@ import { isNil } from '../../utils/is-nil.util';
     MatSelectModule,
   ],
 })
-export class QuestionFormComponent implements OnInit {
-  private dialogData = inject(MAT_DIALOG_DATA);
+export class QuestionFormComponent extends EditModalBase implements OnInit {
   private dialogRef: MatDialogRef<QuestionFormComponent> = inject(MatDialogRef);
-  private mainService = inject(MainService);
-  private destroyRef = inject(DestroyRef);
 
   public questionForm: FormGroup<QuestionForm>;
   public categories: Category[];
@@ -69,7 +66,7 @@ export class QuestionFormComponent implements OnInit {
     );
   }
 
-  public submitQuestion(): void {
+  public submitForm(): void {
     this.dialogRef.close(this.questionForm.value);
   }
 }
