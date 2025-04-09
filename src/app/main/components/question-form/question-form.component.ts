@@ -36,7 +36,7 @@ export class QuestionFormComponent implements OnInit {
   public ngOnInit(): void {
     this.createForm();
     this.loadCategories().subscribe();
-    this.fillEditForm();
+    this.fillEditForm()?.subscribe();
   }
 
   public createForm(): void {
@@ -57,11 +57,11 @@ export class QuestionFormComponent implements OnInit {
     );
   }
 
-  public fillEditForm(): void {
+  public fillEditForm(): Observable<Question> {
     if (isNil(this.dialogData.id)) {
-      return;
+      return void 0;
     }
-    this.mainService.getQuestionById(this.dialogData.id).pipe(
+    return this.mainService.getQuestionById(this.dialogData.id).pipe(
       tap((question: Question) => {
         this.questionForm.patchValue(question);
       }),

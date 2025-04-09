@@ -69,8 +69,12 @@ export class ListedViewComponent implements OnInit {
       filter(Boolean),
       switchMap((data: Question | Category) => {
         return this.presentationItem === PresentationItem.Question
-          ? this.mainService.createQuestion(data as Question)
-          : this.mainService.createCategory(data as Category);
+          ? isNil(id)
+            ? this.mainService.createQuestion(data as Question)
+            : this.mainService.editQuestion(id, data as Question)
+          : isNil(id)
+            ? this.mainService.createCategory(data as Question)
+            : this.mainService.editCategory(id, data as Category);
       }),
       switchMap(() => this.loadItems()),
       takeUntilDestroyed(this.destroyRef)
