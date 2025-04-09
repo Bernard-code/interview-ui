@@ -1,6 +1,9 @@
 <mat-drawer-container class="main-container">
   <mat-drawer mode="side" opened class="main-nav">
-    <h3 class="title">Questions</h3>
+    <div class="title-container">
+      <h3 class="title">Questions</h3>
+      <mat-icon class="add-icon" (click)="openEditModal()">add</mat-icon>
+    </div>
     <mat-list role="list">
       @for (question of questions; track question.id) {
         <mat-list-item class="list-item">

@@ -70,10 +70,10 @@ export class CategoriesListComponent implements OnInit {
   public deleteItem(id: number, name: string): void {
     this.matDialog.open(DeleteConfirmComponent, { width: '400px', data: { name } })
       .afterClosed().pipe(
-      filter(Boolean),
-      switchMap(() => this.mainService.deleteCategory(id)),
-      switchMap(() => this.loadCategories()),
-      takeUntilDestroyed(this.destroyRef),
-    ).subscribe();
+        filter(Boolean),
+        switchMap(() => this.mainService.deleteCategory(id)),
+        switchMap(() => this.loadCategories()),
+        takeUntilDestroyed(this.destroyRef),
+      ).subscribe();
   }
 }

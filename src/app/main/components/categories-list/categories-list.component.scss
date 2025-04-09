@@ -14,8 +14,25 @@
   background: #fff;
 }
 
-.title {
-  margin: 10px;
+.title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    margin: 10px;
+  }
+
+  .add-icon {
+    margin-right: 24px;
+    transition: color .3s ease;
+
+    &:hover {
+      color: $main-blue;
+      cursor: pointer;
+    }
+  }
 }
 
 .delete-btn {
