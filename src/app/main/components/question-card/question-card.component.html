@@ -1,0 +1,7 @@
+<div class="container">
+  <h3 class="name">{{question?.name}}</h3>
+  <button mat-raised-button (click)="flipAnswer()">Show answer</button>
+  @if (showAnswer) {
+    <p class="answer">{{question?.answer}}</p>
+  }
+</div>
