@@ -49,7 +49,9 @@ export class ListedViewComponent implements OnInit {
       tap((listItems: ListItem[]) => {
         let questions: ListItem[] = listItems;
         if (this.presentationItem === PresentationItem.Question) {
-          questions = (listItems as Question[]).filter((item: Question) => item.category !== this.categoryId);
+          questions = (listItems as Question[]).filter((item: Question) =>
+            Number(item.category) === Number(this.categoryId)
+          );
         }
         this.items = questions.sort((a, b) => a.position - b.position);
       }),
@@ -86,14 +88,15 @@ export class ListedViewComponent implements OnInit {
     this.matDialog.open(DeleteConfirmComponent, { width: '400px', data: {name}})
       .afterClosed().pipe(
           filter(Boolean),
-          switchMap(() => {
-            return this.presentationItem === PresentationItem.Question
+          switchMap(() =>
+            this.presentationItem === PresentationItem.Question
               ? this.mainService.deleteQuestion(id)
-              : this.mainService.deleteCategory(id);
-          }),
+              : this.mainService.deleteCategory(id)
+          ),
           switchMap(() => this.loadItems()),
           takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 
+  protected readonly PresentationItem = PresentationItem;
 }

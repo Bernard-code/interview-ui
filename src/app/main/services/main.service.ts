@@ -40,6 +40,6 @@ export class MainService {
   }
 
   public deleteQuestion(questionId: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/categories/${questionId}`);
+    return this.http.delete<void>(`${this.baseUrl}/questions/${questionId}`);
   }
 }
