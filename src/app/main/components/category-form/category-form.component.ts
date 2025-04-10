@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatInput } from '@angular/material/input';
@@ -28,7 +28,7 @@ export class CategoryFormComponent extends EditModalBase implements OnInit {
 
   public ngOnInit(): void {
     this.categoryForm = new FormGroup({
-      name: new FormControl<string>(''),
+      name: new FormControl<string>('', Validators.required),
       position: new FormControl<number>(null),
     });
     this.fillEditForm().subscribe();

@@ -9,11 +9,11 @@
     border-radius: 0;
 
     &.category-nav {
-      background: #e7ebff;
+      background: $category-background;
     }
 
     &.question-nav {
-      background: #fae1ff;
+      background: $question-background;
     }
   }
 }
@@ -30,6 +30,7 @@
 
   .title {
     margin: 10px;
+    text-transform: capitalize;
   }
 
   .add-icon {
@@ -70,4 +71,10 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+}
+
+.list-item {
+  &.active {
+    background-color: $active-item;
+  }
 }

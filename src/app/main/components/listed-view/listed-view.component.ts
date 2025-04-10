@@ -1,8 +1,8 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { MainService } from '../../services/main.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
-import { filter, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
+import { ActivatedRoute, ParamMap, Router, RouterOutlet } from '@angular/router';
+import { BehaviorSubject, filter, Observable, switchMap, tap } from 'rxjs';
 import { Category } from '../../model/category.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryFormComponent } from '../category-form/category-form.component';
@@ -16,7 +16,8 @@ import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.compone
 import { isNil } from '../../utils/is-nil.util';
 import { MatDrawer, MatDrawerContainer, MatDrawerContent } from '@angular/material/sidenav';
 import { MatList, MatListItem } from '@angular/material/list';
-import { RouterOutlet } from '@angular/router';
+import { StateService } from '../../services/state.service';
+import { AsyncPipe, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-listed-view',
@@ -31,6 +32,8 @@ import { RouterOutlet } from '@angular/router';
     MatList,
     MatListItem,
     RouterOutlet,
+    NgClass,
+    AsyncPipe,
   ],
 })
 export class ListedViewComponent implements OnInit {
@@ -39,21 +42,25 @@ export class ListedViewComponent implements OnInit {
   private matDialog = inject(MatDialog);
   private router = inject(Router);
   private activatedRoute = inject(ActivatedRoute);
+  private stateService = inject(StateService);
 
   public items: ListItem[] = [];
   public presentationItem: PresentationItem;
   public categoryId: number;
+  public activeCategoryId$: BehaviorSubject<number> = this.stateService.currentCategoryId$;
+  public activeQuestionId$: BehaviorSubject<number> = this.stateService.currentQuestionId$;
 
   public ngOnInit(): void {
-      this.activatedRoute.paramMap.pipe(
-        tap((params: ParamMap) => {
-          this.categoryId = Number(params.get('id'));
-          this.presentationItem = params.get('item') as PresentationItem;
-        }),
-        switchMap(() => this.loadItems()),
-        takeUntilDestroyed(this.destroyRef),
-      )
-        .subscribe();
+    this.activatedRoute.paramMap.pipe(
+      tap((params: ParamMap) => {
+        this.categoryId = Number(params.get('id'));
+        this.stateService.currentCategoryId$.next(this.categoryId);
+        this.presentationItem = params.get('item') as PresentationItem;
+      }),
+      switchMap(() => this.loadItems()),
+      takeUntilDestroyed(this.destroyRef),
+    )
+      .subscribe();
   }
 
   public loadItems(): Observable<ListItem[]> {
@@ -116,4 +123,6 @@ export class ListedViewComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
+
+  protected readonly PresentationItem = PresentationItem;
 }

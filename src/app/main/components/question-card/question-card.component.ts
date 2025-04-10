@@ -1,11 +1,12 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Question } from '../../model/question.model';
-import { MainService } from '../../services/main.service';
-import { ActivatedRoute, ParamMap } from '@angular/router';
-import { Observable, switchMap, tap } from 'rxjs';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Observable, switchMap, take, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { PresentationItem } from '../../model/presentation-item.model';
+import { StateService } from '../../services/state.service';
 
 @Component({
   selector: 'app-question-card',
@@ -14,12 +15,14 @@ import { PresentationItem } from '../../model/presentation-item.model';
   standalone: true,
   imports: [
     MatButtonModule,
+    MatIconModule,
   ],
 })
 export class QuestionCardComponent implements OnInit {
-  private mainService = inject(MainService);
+  private stateService = inject(StateService);
   private activatedRoute = inject(ActivatedRoute);
   private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   public questionId: number;
   public question: Question;
@@ -29,6 +32,8 @@ export class QuestionCardComponent implements OnInit {
     this.activatedRoute.paramMap.pipe(
       tap((params: ParamMap) => {
         this.questionId = Number(params.get('id'));
+        this.stateService.currentQuestionId$.next(this.questionId);
+        this.showAnswer = false;
       }),
       switchMap(() => this.loadData()),
       takeUntilDestroyed(this.destroyRef),
@@ -36,10 +41,13 @@ export class QuestionCardComponent implements OnInit {
       .subscribe();
   }
 
-  public loadData(): Observable<Question> {
-    return this.mainService.getQuestionById(this.questionId).pipe(
-      tap((question: Question) => {
-        this.question = question;
+  public loadData(): Observable<Question[]> {
+    this.stateService.loadQuestions(this.stateService.currentCategoryId$.getValue())
+      .pipe(take(1), takeUntilDestroyed(this.destroyRef))
+      .subscribe()
+    return this.stateService.questions$.pipe(
+      tap((questions: Question[]) => {
+        this.question = questions.find((question: Question) => question.id === this.questionId);
       }),
       takeUntilDestroyed(this.destroyRef)
     )
@@ -47,5 +55,11 @@ export class QuestionCardComponent implements OnInit {
 
   public flipAnswer(): void {
     this.showAnswer = !this.showAnswer;
+  }
+
+  public move(next: boolean = true): void {
+    const nextId: number = this.stateService.getNextOrPrevQuestionId(this.questionId, next);
+    const currentCategoryId: number = this.stateService.currentCategoryId$.getValue();
+    this.router.navigate([`/categories/${PresentationItem.Category}/${currentCategoryId}/${PresentationItem.Question}/${nextId}`]);
   }
 }

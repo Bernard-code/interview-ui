@@ -1,12 +1,16 @@
 <mat-drawer-container class="main-container">
   <mat-drawer mode="side" opened class="main-nav {{presentationItem}}-nav">
     <div class="title-container">
-      <h3 class="title">{{presentationItem}}</h3>
+      <h3 class="title">{{ presentationItem }}</h3>
       <mat-icon class="add-icon" (click)="openEditModal()">add</mat-icon>
     </div>
     <mat-list role="list">
       @for (item of items; track item.id) {
-        <mat-list-item class="list-item">
+        <mat-list-item class="list-item"
+            [ngClass]="{'active':
+              ((activeCategoryId$ | async) === item.id && presentationItem === PresentationItem.Category)
+              || ((activeQuestionId$ | async) === item.id && presentationItem === PresentationItem.Question)
+            }">
           <div class="category-row">
             <div
               class="category"

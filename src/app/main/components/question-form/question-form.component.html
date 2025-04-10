@@ -35,6 +35,7 @@
     </mat-select>
   </mat-form-field>
   <button
+    [disabled]="!questionForm.valid"
     (click)="submitForm()"
     type="button"
     mat-button

@@ -16,6 +16,7 @@
     >
   </mat-form-field>
   <button
+    [disabled]="!categoryForm.valid"
     (click)="submitForm()"
     type="button"
     mat-button

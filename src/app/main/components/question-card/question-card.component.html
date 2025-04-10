@@ -1,6 +1,10 @@
 <div class="container">
   <h3 class="name">{{question?.name}}</h3>
-  <button mat-raised-button (click)="flipAnswer()">Show answer</button>
+  <div class="btn-group">
+    <button class="btn" mat-raised-button (click)="flipAnswer()">Answer</button>
+    <button class="btn" mat-raised-button (click)="move(false)"><mat-icon>chevron_left</mat-icon></button>
+    <button class="btn" mat-raised-button (click)="move()"><mat-icon>chevron_right</mat-icon></button>
+  </div>
   @if (showAnswer) {
     <p class="answer">{{question?.answer}}</p>
   }

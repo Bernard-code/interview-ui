@@ -1,3 +1,5 @@
+@import '../../../styles/variables';
+
 .container {
   padding: 15px;
   display: flex;
@@ -13,7 +15,7 @@
   }
 
   .confirm-btn {
-    background: #ff9595;
+    background: $confirm-button;
     color: #fff;
   }
 }
