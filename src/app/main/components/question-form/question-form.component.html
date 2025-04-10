@@ -7,14 +7,11 @@
       placeholder="Name"
     >
   </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Answer</mat-label>
-    <textarea
-      formControlName="answer"
-      matInput
-      placeholder="Answer"
-    ></textarea>
-  </mat-form-field>
+  <angular-editor
+    [config]="editorConfig"
+    formControlName="answer"
+    class="text-editor"
+  ></angular-editor>
   <mat-form-field appearance="outline">
     <mat-label>Position</mat-label>
     <input

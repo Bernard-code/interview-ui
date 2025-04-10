@@ -3,13 +3,13 @@ $nav-background: #0F172A;
 $category-background: #e7ebff;
 $question-background: #334155;
 $main-background: #475569;
-$hover-item: #fff;
+$hover-item: #03A062;
 $delete-red: #ff6363;
 $active-item: #1D4ED8;
 $confirm-button: #ff9595;
 
 @mixin active-item {
-  border: 1px $font-color-5 solid;
+  border: 1px #6a6b6c solid;
 }
 
 @mixin active-item-transition {
@@ -20,12 +20,15 @@ $font-color-1: #fff;
 $font-color-2: #e6e6e6;
 $font-color-3: #cdcece;
 $font-color-4: #9c9c9d;
-$font-color-5: #6a6b6c;
 
-$color-bg-1: #101111;
+//$color-bg-1: #101111;
+//$color-bg-2: #18191a;
+//$color-bg-3: #313133;
+//$color-bg-4: hsl(215, 10%, 50%);
+$color-bg-1: #141415;
 $color-bg-2: #18191a;
-$color-bg-3: #313133;
-$color-bg-4: #494b4d;
+$color-bg-3: #202223;
+$color-bg-4: hsl(215, 10%, 50%);
 
 @mixin active-element-transition {
   transition: background .3s ease;

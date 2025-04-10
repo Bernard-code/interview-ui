@@ -3,3 +3,18 @@
   display: flex;
   flex-direction: column;
 }
+
+.text-editor {
+  margin-bottom: 20px;
+  color: black;
+
+  ::ng-deep {
+    .angular-editor-textarea {
+      border: black 1px solid !important;
+
+      &:focus {
+        outline: none !important;
+      }
+    }
+  }
+}

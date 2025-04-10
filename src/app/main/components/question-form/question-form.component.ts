@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { isNil } from '../../utils/is-nil.util';
 import { EditModalBase } from '../../utils/edit-modal.base';
 import { StateService } from '../../services/state.service';
+import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
 
 @Component({
   selector: 'app-question-form',
@@ -23,6 +24,7 @@ import { StateService } from '../../services/state.service';
     MatInput,
     MatButtonModule,
     MatSelectModule,
+    AngularEditorModule,
   ],
 })
 export class QuestionFormComponent extends EditModalBase implements OnInit {
@@ -31,6 +33,16 @@ export class QuestionFormComponent extends EditModalBase implements OnInit {
 
   public questionForm: FormGroup<QuestionForm>;
   public categories: Category[];
+  public editorConfig: AngularEditorConfig = {
+    editable: true,
+    spellcheck: false,
+    height: '350px',
+    showToolbar: false,
+    placeholder: 'Answer',
+    fonts: [
+      {class: 'Inter', name: 'Inter'},
+    ],
+  };
 
   public ngOnInit(): void {
     this.createForm();
