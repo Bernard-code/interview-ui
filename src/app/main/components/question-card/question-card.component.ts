@@ -1,10 +1,11 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { Question } from '../../model/question.model';
 import { MainService } from '../../services/main.service';
-import { ActivatedRoute } from '@angular/router';
-import { Observable, tap } from 'rxjs';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { Observable, switchMap, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
+import { PresentationItem } from '../../model/presentation-item.model';
 
 @Component({
   selector: 'app-question-card',
@@ -25,8 +26,14 @@ export class QuestionCardComponent implements OnInit {
   public showAnswer: boolean = false;
 
   public ngOnInit(): void {
-    this.questionId = this.activatedRoute.snapshot.params['id'];
-    this.loadData().subscribe();
+    this.activatedRoute.paramMap.pipe(
+      tap((params: ParamMap) => {
+        this.questionId = Number(params.get('id'));
+      }),
+      switchMap(() => this.loadData()),
+      takeUntilDestroyed(this.destroyRef),
+    )
+      .subscribe();
   }
 
   public loadData(): Observable<Question> {

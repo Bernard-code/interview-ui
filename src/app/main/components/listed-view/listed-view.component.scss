@@ -1,41 +1,73 @@
-.title {
-  text-transform: capitalize;
-  margin: 10px;
+@import '../../../styles/variables';
+
+.main-container {
+  height: 100vh;
+
+  .main-nav {
+
+    width: 250px;
+    border-radius: 0;
+
+    &.category-nav {
+      background: #e7ebff;
+    }
+
+    &.question-nav {
+      background: #fae1ff;
+    }
+  }
 }
 
-.btn {
-  margin: 10px 10px 0;
-  .mat-icon {
-    margin: 0;
+.main-content {
+  background: #fff;
+}
+
+.title-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  .title {
+    margin: 10px;
+  }
+
+  .add-icon {
+    margin-right: 24px;
+    transition: color .3s ease;
+
+    &:hover {
+      color: $main-blue;
+      cursor: pointer;
+    }
   }
 }
 
 .delete-btn {
-  .mat-icon {
-    color: #ff9595;
+  color: #000;
+  font-size: 20px;
+  transition: color .3s ease;
+  padding: 0 10px;
+
+  &:hover {
+    color: $delete-red;
+    cursor: pointer;
   }
 }
 
-.categories-container {
+.category {
+  transition: color .3s ease;
+  width: 99%;
+
+  &:hover {
+    color: $main-blue;
+    cursor: pointer;
+  }
+}
+
+.category-row {
   display: flex;
-  flex-direction: column;
-
-  .category {
-    margin: 10px 10px 0;
-    padding: 10px;
-    border: 1px solid lightgray;
-    border-radius: 4px;
-    transition: background .3s ease;
-    width: 99%;
-
-    &:hover {
-      background-color: #ededed;
-      cursor: pointer;
-    }
-  }
-
-  .row {
-    display: flex;
-    justify-content: space-between;
-  }
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }

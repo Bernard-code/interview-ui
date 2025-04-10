@@ -1,8 +1,8 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { MainService } from '../../services/main.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
-import { filter, Observable, switchMap, tap } from 'rxjs';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { filter, Observable, switchMap, tap, withLatestFrom } from 'rxjs';
 import { Category } from '../../model/category.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryFormComponent } from '../category-form/category-form.component';
@@ -14,6 +14,9 @@ import { Question } from '../../model/question.model';
 import { MatIconModule } from '@angular/material/icon';
 import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 import { isNil } from '../../utils/is-nil.util';
+import { MatDrawer, MatDrawerContainer, MatDrawerContent } from '@angular/material/sidenav';
+import { MatList, MatListItem } from '@angular/material/list';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-listed-view',
@@ -22,6 +25,12 @@ import { isNil } from '../../utils/is-nil.util';
   imports: [
     MatButtonModule,
     MatIconModule,
+    MatDrawer,
+    MatDrawerContainer,
+    MatDrawerContent,
+    MatList,
+    MatListItem,
+    RouterOutlet,
   ],
 })
 export class ListedViewComponent implements OnInit {
@@ -36,10 +45,15 @@ export class ListedViewComponent implements OnInit {
   public categoryId: number;
 
   public ngOnInit(): void {
-    this.categoryId = this.activatedRoute.snapshot.params['id'];
-    this.presentationItem = this.activatedRoute.snapshot.params['item'];
-
-    this.loadItems().subscribe();
+      this.activatedRoute.paramMap.pipe(
+        tap((params: ParamMap) => {
+          this.categoryId = Number(params.get('id'));
+          this.presentationItem = params.get('item') as PresentationItem;
+        }),
+        switchMap(() => this.loadItems()),
+        takeUntilDestroyed(this.destroyRef),
+      )
+        .subscribe();
   }
 
   public loadItems(): Observable<ListItem[]> {
@@ -83,9 +97,9 @@ export class ListedViewComponent implements OnInit {
 
   public navigate(id: number): void {
     if (this.presentationItem === PresentationItem.Category) {
-      this.router.navigate([`/categories/${PresentationItem.Question}/${id}`]);
+      this.router.navigate([`/categories/${PresentationItem.Category}/${id}/${PresentationItem.Question}`]);
     } else {
-      this.router.navigate([`/question/${id}`]);
+      this.router.navigate([`/categories/${PresentationItem.Category}/${this.categoryId}/${PresentationItem.Question}/${id}`]);
     }
   }
 
@@ -102,5 +116,4 @@ export class ListedViewComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
-
 }

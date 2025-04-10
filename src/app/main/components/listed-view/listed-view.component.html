@@ -1,17 +1,29 @@
-<h2 class="title">{{presentationItem}}</h2>
-<button class="btn" mat-raised-button (click)="openEditModal()"><mat-icon>add</mat-icon></button>
-<div class="categories-container">
-  @for (item of items; track item.id) {
-    <div class="row">
-      <div class="category" (click)="navigate(item.id)">{{ item.name }}</div>
-      <button mat-raised-button class="btn edit-btn" (click)="openEditModal(item.id)"><mat-icon>edit</mat-icon></button>
-      <button mat-raised-button class="btn delete-btn" (click)="deleteItem(item.id, item.name)"><mat-icon>delete</mat-icon></button>
+<mat-drawer-container class="main-container">
+  <mat-drawer mode="side" opened class="main-nav {{presentationItem}}-nav">
+    <div class="title-container">
+      <h3 class="title">{{presentationItem}}</h3>
+      <mat-icon class="add-icon" (click)="openEditModal()">add</mat-icon>
     </div>
-  }
-<!-- TODO: dodac kategorie pusta-->
-<!--  @if (presentationItem === PresentationItem.Category) {-->
-<!--    <div class="row">-->
-<!--      <div class="category" (click)="navigate(null)">Empty category</div>-->
-<!--    </div>-->
-<!--  }-->
-</div>
+    <mat-list role="list">
+      @for (item of items; track item.id) {
+        <mat-list-item class="list-item">
+          <div class="category-row">
+            <div
+              class="category"
+              (click)="navigate(item.id)"
+              (dblclick)="openEditModal(item.id)"
+            >{{ item.name }}
+            </div>
+            <mat-icon class="delete-btn" (click)="deleteItem(item.id, item.name)">close</mat-icon>
+          </div>
+        </mat-list-item>
+      }
+      <!-- TODO: dodac kategorie pusta-->
+      <!--    <mat-list-item>-->
+      <!--    </mat-list-item>-->
+    </mat-list>
+  </mat-drawer>
+  <mat-drawer-content class="main-content">
+    <router-outlet></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>
