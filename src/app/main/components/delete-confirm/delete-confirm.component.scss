@@ -7,6 +7,7 @@
 
   .message {
     padding: 0 10px;
+    color: $color-bg-2;
   }
 
   .btn-box {
@@ -16,6 +17,6 @@
 
   .confirm-btn {
     background: $confirm-button;
-    color: #fff;
+    color: $color-bg-2;
   }
 }

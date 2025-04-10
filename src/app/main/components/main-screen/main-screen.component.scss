@@ -4,25 +4,29 @@
   height: 100vh;
 
   .main-nav {
-    background: #eee;
+    background: $color-bg-1;
     width: 150px;
     border-radius: 0;
 
     .list-item {
       .nav-item {
+        color: $font-color-4;
         transition: color .3s ease;
       }
 
       &:hover {
         cursor: pointer;
+        color: $font-color-1;
+
         .nav-item {
-          color: $main-blue;
+          color: $font-color-1;
         }
       }
     }
   }
 }
 
-  .main-content {
-    background: #fff;
-  }
+.main-content {
+  background: $color-bg-4;
+  color: $font-color-2;
+}

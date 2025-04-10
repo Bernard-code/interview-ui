@@ -1,7 +1,11 @@
+@import '../../../styles/variables';
+
 .container {
   padding: 10px;
+  background: $color-bg-4;
 
   .name {
+    color: $font-color-1;
     margin:  0 0 10px;
   }
 
@@ -19,5 +23,7 @@
     }
   }
 
-  .answer {}
+  .answer {
+    color: $font-color-1;
+  }
 }

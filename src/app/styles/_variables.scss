@@ -1,6 +1,41 @@
-$main-blue: #1375fb;
-$delete-red: #ae0000;
-$active-item: #e7f2d6;
+
+$nav-background: #0F172A;
 $category-background: #e7ebff;
-$question-background: #fae1ff;
+$question-background: #334155;
+$main-background: #475569;
+$hover-item: #fff;
+$delete-red: #ff6363;
+$active-item: #1D4ED8;
 $confirm-button: #ff9595;
+
+@mixin active-item {
+  border: 1px $font-color-5 solid;
+}
+
+@mixin active-item-transition {
+  transition: transform .3s ease, width .3s ease, background .3s ease;
+}
+
+$font-color-1: #fff;
+$font-color-2: #e6e6e6;
+$font-color-3: #cdcece;
+$font-color-4: #9c9c9d;
+$font-color-5: #6a6b6c;
+
+$color-bg-1: #101111;
+$color-bg-2: #18191a;
+$color-bg-3: #313133;
+$color-bg-4: #494b4d;
+
+@mixin active-element-transition {
+  transition: background .3s ease;
+}
+
+@mixin active-element {
+  border-radius: 12px;
+  background: var(--Card-BG, linear-gradient(137deg, #202325 4.87%, #171b1b 75.88%));
+  border-top: 1px solid var(--Card-Border, hsla(0, 0%, 100%, .06));
+  border-right: 1px solid var(--Card-Border, hsla(0, 0%, 100%, .06));
+  border-left: 1px solid var(--Card-Border, hsla(0, 0%, 100%, .06));
+  box-shadow: inset 0 1px 1px 0 hsla(0, 0%, 100%, .1), 0 2px 40px 10px rgba(154, 170, 255, .05), 0 0 16px -7px rgba(154, 170, 255, .05);
+}

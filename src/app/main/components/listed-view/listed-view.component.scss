@@ -4,22 +4,22 @@
   height: 100vh;
 
   .main-nav {
-
+    background: $color-bg-3;
     width: 250px;
     border-radius: 0;
 
     &.category-nav {
-      background: $category-background;
+      background: $color-bg-2;
     }
 
     &.question-nav {
-      background: $question-background;
+      background: $color-bg-3;
     }
   }
 }
 
 .main-content {
-  background: #fff;
+  background: $color-bg-4;
 }
 
 .title-container {
@@ -29,6 +29,7 @@
   align-items: center;
 
   .title {
+    color: $font-color-1;
     margin: 10px;
     text-transform: capitalize;
   }
@@ -38,14 +39,14 @@
     transition: color .3s ease;
 
     &:hover {
-      color: $main-blue;
+      color: $hover-item;
       cursor: pointer;
     }
   }
 }
 
 .delete-btn {
-  color: #000;
+  color: $font-color-2;
   font-size: 20px;
   transition: color .3s ease;
   padding: 0 10px;
@@ -59,9 +60,10 @@
 .category {
   transition: color .3s ease;
   width: 99%;
+  color: $font-color-2;
 
   &:hover {
-    color: $main-blue;
+    color: $hover-item;
     cursor: pointer;
   }
 }
@@ -74,7 +76,8 @@
 }
 
 .list-item {
+  @include active-element-transition;
   &.active {
-    background-color: $active-item;
+    @include active-element;
   }
 }
