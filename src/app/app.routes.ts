@@ -5,14 +5,22 @@ import { ListedViewComponent } from './main/components/listed-view/listed-view.c
 import { QuestionCardComponent } from './main/components/question-card/question-card.component';
 
 export const routes: Routes = [
-  { path: '', component: MainScreenComponent,
+  {
+    path: '', component: MainScreenComponent,
     children: [
       { path: 'todo', component: ToDoComponent },
-      { path: 'categories/:item', component: ListedViewComponent,
+      {
+        path: 'categories/:item',
+        component: ListedViewComponent,
         children: [
-          { path: ':id/:item', component: ListedViewComponent,
+          {
+            path: ':id/:item',
+            component: ListedViewComponent,
             children: [
-              { path: ':id', component: QuestionCardComponent },
+              {
+                path: ':id',
+                component: QuestionCardComponent,
+              },
             ]
           },
         ]
