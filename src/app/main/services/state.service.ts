@@ -15,9 +15,10 @@ export class StateService {
   public questions$: BehaviorSubject<Question[]> = new BehaviorSubject<Question[]>([]);
   public currentCategoryId$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   public currentQuestionId$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  public highestPosition: number;
 
   public loadCategories(): Observable<Category[]> {
-    return this.mainService.getQuestions().pipe(
+    return this.mainService.getCategories().pipe(
       tap((categories: Category[]) => {
         this.categories$.next(categories.sort((a, b) => a.position - b.position));
       }),
@@ -34,6 +35,7 @@ export class StateService {
           );
         }
         questions = questions.sort((a, b) => a.position - b.position);
+        this.highestPosition = questions[questions.length - 1].position;
         this.questions$.next(questions);
       }),
     );

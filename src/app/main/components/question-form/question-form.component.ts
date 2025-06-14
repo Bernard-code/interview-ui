@@ -54,7 +54,7 @@ export class QuestionFormComponent extends EditModalBase implements OnInit {
     this.questionForm = new FormGroup({
       name: new FormControl<string>('', Validators.required),
       answer: new FormControl<string>(''),
-      position: new FormControl<number>(null),
+      position: new FormControl<number>(this.stateService.highestPosition + 1),
       category: new FormControl<number>(this.stateService.currentCategoryId$.getValue(), Validators.required),
     });
   }

@@ -5,7 +5,7 @@
       <mat-icon class="add-icon" (click)="openEditModal()">add</mat-icon>
     </div>
     <mat-list role="list">
-      @for (item of items; track item.id) {
+      @for (item of items$ | async; track item.id; let index = $index) {
         <mat-list-item class="list-item"
             [ngClass]="{'active':
               ((activeCategoryId$ | async) === item.id && presentationItem === PresentationItem.Category)
@@ -16,7 +16,11 @@
               class="category"
               (click)="navigate(item.id)"
               (dblclick)="openEditModal(item.id)"
-            >{{ item.name }}
+            >
+            @if (presentationItem === PresentationItem.Question) {
+              <span>{{index + 1}}. </span>
+            }
+            {{ item.name }}
             </div>
             <mat-icon class="delete-btn" (click)="deleteItem(item.id, item.name)">close</mat-icon>
           </div>

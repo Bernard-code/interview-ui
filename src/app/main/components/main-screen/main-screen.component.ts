@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { MatDrawer, MatDrawerContainer, MatDrawerContent, MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { Router, RouterOutlet } from '@angular/router';
@@ -15,12 +15,14 @@ import { PresentationItem } from '../../model/presentation-item.model';
     MatDrawerContent,
     MatSidenavModule,
     MatListModule,
-  ]
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainScreenComponent {
   private router = inject(Router);
 
   public navItems = [
+    {name: 'Home', url: ''},
     {name: 'ToDo', url: '/todo'},
     {name: 'Questions', url: `/categories/${PresentationItem.Category}/`},
   ];

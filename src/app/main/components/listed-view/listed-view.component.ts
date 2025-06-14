@@ -44,11 +44,13 @@ export class ListedViewComponent implements OnInit {
   private activatedRoute = inject(ActivatedRoute);
   private stateService = inject(StateService);
 
-  public items: ListItem[] = [];
+  public items$: BehaviorSubject<ListItem[]> = new BehaviorSubject<ListItem[]>([]);
   public presentationItem: PresentationItem;
   public categoryId: number;
   public activeCategoryId$: BehaviorSubject<number> = this.stateService.currentCategoryId$;
   public activeQuestionId$: BehaviorSubject<number> = this.stateService.currentQuestionId$;
+
+  protected readonly PresentationItem = PresentationItem;
 
   public ngOnInit(): void {
     this.activatedRoute.paramMap.pipe(
@@ -75,7 +77,7 @@ export class ListedViewComponent implements OnInit {
             Number(item.category) === Number(this.categoryId)
           );
         }
-        this.items = questions.sort((a, b) => a.position - b.position);
+        this.items$.next(questions.sort((a, b) => a.position - b.position));
       }),
       takeUntilDestroyed(this.destroyRef)
     );
@@ -98,6 +100,7 @@ export class ListedViewComponent implements OnInit {
             : this.mainService.editCategory(id, data as Category);
       }),
       switchMap(() => this.loadItems()),
+      switchMap(() => this.stateService.loadQuestions()),
       takeUntilDestroyed(this.destroyRef)
     ).subscribe();
   }
@@ -123,6 +126,4 @@ export class ListedViewComponent implements OnInit {
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
-
-  protected readonly PresentationItem = PresentationItem;
 }
