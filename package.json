@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:interview": "node dist/interview/server/server.mjs",
-    "predeploy": "ng build --configuration production --base-href=/interview/",
+    "predeploy": "ng build --configuration production --base-href=/interview-ui/",
     "deploy": "angular-cli-ghpages --dir=dist/interview/browser"
   },
   "private": true,
