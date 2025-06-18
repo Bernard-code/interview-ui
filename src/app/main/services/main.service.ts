@@ -8,7 +8,8 @@ import { Question } from '../model/question.model';
   providedIn: 'root'
 })
 export class MainService {
-  private baseUrl = 'http://localhost:8080/api';
+  // private baseUrl = 'http://localhost:8080/api';
+  private baseUrl = 'https://interview-spring-production.up.railway.app/api';
   private http = inject(HttpClient);
 
   public getCategories(): Observable<Category[]> {

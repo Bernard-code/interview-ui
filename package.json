@@ -4,12 +4,12 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --output-path=dist",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "serve:ssr:interview": "node dist/interview/server/server.mjs",
-    "predeploy": "ng build --configuration production --base-href=/interview-ui/",
-    "deploy": "angular-cli-ghpages --dir=dist/interview/browser"
+    "predeploy": "ng build --configuration production --base-href=/interview-ui/ --output-path=dist",
+    "deploy": "angular-cli-ghpages --dir=dist/browser"
   },
   "private": true,
   "dependencies": {
@@ -53,5 +53,9 @@
     "stylelint-config-standard": "^37.0.0",
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.28.0"
+  },
+  "options": {
+    "outputPath": "dist/interview-ui",
+    "baseHref": "/interview-ui/"
   }
 }
