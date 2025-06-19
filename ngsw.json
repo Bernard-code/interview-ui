@@ -1,0 +1,79 @@
+{
+  "configVersion": 1,
+  "timestamp": 1750291652485,
+  "index": "/interview-ui/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/interview-ui/favicon.ico",
+        "/interview-ui/index.html",
+        "/interview-ui/main-RQHX65Y4.js",
+        "/interview-ui/manifest.webmanifest",
+        "/interview-ui/polyfills-FFHMD2TL.js",
+        "/interview-ui/styles-6X2DERF6.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/interview-ui/icons/icon-128x128.png",
+        "/interview-ui/icons/icon-144x144.png",
+        "/interview-ui/icons/icon-152x152.png",
+        "/interview-ui/icons/icon-192x192.png",
+        "/interview-ui/icons/icon-384x384.png",
+        "/interview-ui/icons/icon-512x512.png",
+        "/interview-ui/icons/icon-72x72.png",
+        "/interview-ui/icons/icon-96x96.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/interview-ui/favicon.ico": "9c39f434fe1261f68c5e3eefdf734630d99c5670",
+    "/interview-ui/icons/icon-128x128.png": "f912963bdc6d5a38d8f1dd0afbaab2ce8d657acb",
+    "/interview-ui/icons/icon-144x144.png": "b155fd5f2fd5d2ea7760721063003c4cd95fd783",
+    "/interview-ui/icons/icon-152x152.png": "eae6e0f0c8afb8aaae339e2a569b43e9238e5e6c",
+    "/interview-ui/icons/icon-192x192.png": "15c4180454633880d98674aa7394656196c91584",
+    "/interview-ui/icons/icon-384x384.png": "94a915751ef6c9282df9aea405ad679230631814",
+    "/interview-ui/icons/icon-512x512.png": "1de182f76f7329dfa8f9fcdd1fdcdd695bea6a99",
+    "/interview-ui/icons/icon-72x72.png": "aa88a6096bd973be7f6d7a5489bfa6bc2463f8c4",
+    "/interview-ui/icons/icon-96x96.png": "7fb8f59c30ce2ff12c700321a0b39e14b3dc8f95",
+    "/interview-ui/index.html": "12f715666074bd8af49bbcd23d331e43c51775b1",
+    "/interview-ui/main-RQHX65Y4.js": "616afb8b7a55dd808955b20b88360e0cdbedcc48",
+    "/interview-ui/manifest.webmanifest": "c5cecd360d4336b383a42fbff3313f10ac3dc85a",
+    "/interview-ui/polyfills-FFHMD2TL.js": "f49b49a155bc7d192db62a4c15d0a612b460a667",
+    "/interview-ui/styles-6X2DERF6.css": "762ec1d80bbcbfdb44bd16a4136a275d0274e7ba"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
