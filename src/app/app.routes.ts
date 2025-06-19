@@ -9,10 +9,22 @@ export const routes: Routes = [
     path: '', component: MainScreenComponent,
     children: [
       { path: 'todo', component: ToDoComponent },
-      { path: 'categories/:item', component: ListedViewComponent },
-      { path: 'categories/:item/:id', component: ListedViewComponent },
-      { path: 'categories/:item/:id/:item', component: ListedViewComponent },
-      { path: 'categories/:item/:id/:item/:id', component: QuestionCardComponent },
+      {
+        path: 'categories/:item',
+        component: ListedViewComponent,
+        children: [
+          {
+            path: ':id/:item',
+            component: ListedViewComponent,
+            children: [
+              {
+                path: ':id',
+                component: QuestionCardComponent,
+              },
+            ]
+          },
+        ]
+      },
     ]
   },
 ];
