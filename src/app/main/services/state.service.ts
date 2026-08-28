@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { MainService } from './main.service';
 import { Category } from '../model/category.model';
 import { Question } from '../model/question.model';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, merge, Observable, tap } from 'rxjs';
 import { isNil } from '../utils/is-nil.util';
 
 @Injectable({
@@ -16,6 +16,10 @@ export class StateService {
   public currentCategoryId$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   public currentQuestionId$: BehaviorSubject<number> = new BehaviorSubject<number>(null);
   public highestPosition: number;
+
+  public loadData(): Observable<any> {
+    return merge(this.loadCategories(), this.loadQuestions());
+  }
 
   public loadCategories(): Observable<Category[]> {
     return this.mainService.getCategories().pipe(
