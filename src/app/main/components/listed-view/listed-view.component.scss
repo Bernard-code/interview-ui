@@ -86,7 +86,7 @@
   align-items: center;
   gap: 6px;
   max-width: 220px;
-  padding: 6px 8px 6px 12px;
+  padding: 6px 8px 6px 8px;
   border-radius: 999px;
   border: 1px solid $border-subtle;
   background: $color-bg-2;
@@ -105,6 +105,25 @@
     @include active-element;
     color: $font-color-1;
   }
+
+  &.cdk-drag-placeholder {
+    opacity: 0.35;
+  }
+
+  &.cdk-drag-animating {
+    transition: transform 150ms ease;
+  }
+}
+
+.chips.cdk-drop-list-dragging .chip:not(.cdk-drag-placeholder) {
+  transition: transform 150ms ease;
+}
+
+.chip-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .chip-del,

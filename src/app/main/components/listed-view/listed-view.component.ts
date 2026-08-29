@@ -9,6 +9,7 @@ import { CategoryFormComponent } from '../category-form/category-form.component'
 import { MatButtonModule } from '@angular/material/button';
 import { PresentationItem } from '../../model/presentation-item.model';
 import { QuestionFormComponent } from '../question-form/question-form.component';
+import { ListItem } from '../../model/list-item.model';
 import { Question } from '../../model/question.model';
 import { MatIconModule } from '@angular/material/icon';
 import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
@@ -37,7 +38,11 @@ export class ListedViewComponent implements OnInit {
   private matDialog = inject(MatDialog);
   private stateService = inject(StateService);
 
-  public categories$ = this.stateService.categories$;
+  public categories$: Observable<Category[]> = this.stateService.categories$.pipe(
+    map((categories: Category[]) =>
+      [...categories].sort((a, b) => a.position - b.position)
+    ),
+  );
   public activeCategoryId$ = this.stateService.currentCategoryId$;
   public activeQuestionId$ = this.stateService.currentQuestionId$;
 
@@ -116,6 +121,40 @@ export class ListedViewComponent implements OnInit {
   }
 
   public reorderQuestions(event: CdkDragDrop<Question[]>): void {
+    this.persistReorder(
+      event,
+      (updates: Question[]) => {
+        const updatedById = new Map(updates.map((item: Question) => [item.id, item]));
+        this.stateService.questions$.next(
+          this.stateService.questions$.getValue().map((question: Question) =>
+            updatedById.get(question.id) ?? question
+          ),
+        );
+      },
+      (question: Question) => this.mainService.editQuestion(question.id, question),
+    );
+  }
+
+  public reorderCategories(event: CdkDragDrop<Category[]>): void {
+    this.persistReorder(
+      event,
+      (updates: Category[]) => {
+        const updatedById = new Map(updates.map((item: Category) => [item.id, item]));
+        this.stateService.categories$.next(
+          this.stateService.categories$.getValue().map((category: Category) =>
+            updatedById.get(category.id) ?? category
+          ),
+        );
+      },
+      (category: Category) => this.mainService.editCategory(category.id, category),
+    );
+  }
+
+  private persistReorder<T extends ListItem>(
+    event: CdkDragDrop<T[]>,
+    applyLocal: (updates: T[]) => void,
+    save: (item: T) => Observable<unknown>,
+  ): void {
     if (event.previousIndex === event.currentIndex) {
       return;
     }
@@ -125,26 +164,18 @@ export class ListedViewComponent implements OnInit {
     moveItemInArray(reordered, event.previousIndex, event.currentIndex);
 
     const updates = reordered
-      .map((question: Question, index: number) => ({ ...question, position: index + 1 }))
-      .filter((question: Question) => {
-        const previous = original.find((item: Question) => item.id === question.id);
-        return previous?.position !== question.position;
+      .map((item: T, index: number) => ({ ...item, position: index + 1 }))
+      .filter((item: T) => {
+        const previous = original.find((entry: T) => entry.id === item.id);
+        return previous?.position !== item.position;
       });
 
     if (!updates.length) {
       return;
     }
 
-    const updatedById = new Map(updates.map((question: Question) => [question.id, question]));
-    this.stateService.questions$.next(
-      this.stateService.questions$.getValue().map((question: Question) =>
-        updatedById.get(question.id) ?? question
-      ),
-    );
-
-    forkJoin(updates.map((question: Question) =>
-      this.mainService.editQuestion(question.id, question)
-    )).pipe(
+    applyLocal(updates);
+    forkJoin(updates.map((item: T) => save(item))).pipe(
       switchMap(() => this.stateService.loadData()),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();

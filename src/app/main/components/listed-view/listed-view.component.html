@@ -30,21 +30,28 @@
         <mat-icon>add</mat-icon>
       </button>
     </div>
-    <div class="chips">
+    <div
+      class="chips"
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      [cdkDropListData]="categories ?? []"
+      (cdkDropListDropped)="reorderCategories($event)"
+    >
       @for (item of categories; track item.id) {
-        <button
-          type="button"
+        <div
           class="chip"
+          cdkDrag
           [class.active]="categoryId === item.id"
           (click)="openItem(item.id, PresentationItem.Category)"
           (dblclick)="openEditModal(item.id, PresentationItem.Category)"
         >
-          {{ item.name }}
+          <mat-icon class="q-handle" cdkDragHandle>drag_indicator</mat-icon>
+          <span class="chip-name">{{ item.name }}</span>
           <mat-icon
             class="chip-del"
             (click)="deleteItem($event, item.id, item.name, PresentationItem.Category)"
           >close</mat-icon>
-        </button>
+        </div>
       }
     </div>
   </section>

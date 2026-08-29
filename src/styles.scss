@@ -32,6 +32,19 @@ app-root {
   overflow: hidden;
 }
 
+.chip.cdk-drag-preview {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  padding: 6px 8px;
+  border: 1px solid rgba(61, 214, 140, 0.35);
+  border-radius: 999px;
+  background: #1c1f22;
+  color: #f2f3f4;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
 .q-item.cdk-drag-preview {
   display: flex;
   align-items: center;
