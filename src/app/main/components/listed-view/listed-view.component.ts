@@ -82,7 +82,12 @@ export class ListedViewComponent implements OnInit {
 
     const modal = type === PresentationItem.Question
       ? this.matDialog.open(QuestionFormComponent, { width: '800px', data: { id } })
-      : this.matDialog.open(CategoryFormComponent, { width: '400px', data: { id } });
+      : this.matDialog.open(CategoryFormComponent, {
+          width: '420px',
+          data: { id },
+          panelClass: 'app-dialog',
+          backdropClass: 'app-dialog-backdrop',
+        });
 
     modal.afterClosed().pipe(
       filter(Boolean),

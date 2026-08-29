@@ -1,5 +1,131 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+}
+
 .form {
-  padding: 20px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  padding: 24px 28px 28px;
+}
+
+.form-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kicker {
+  margin: 0;
+  color: $font-color-3;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid $border-subtle;
+  border-radius: 8px;
+  background: transparent;
+  color: $font-color-2;
+  cursor: pointer;
+  @include active-element-transition;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    border-color: rgba(61, 214, 140, 0.4);
+    color: $font-color-1;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: $font-color-3;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    border: 1px solid $border-subtle;
+    border-radius: 8px;
+    background: $color-bg-3;
+    color: $font-color-1;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    outline: none;
+    @include active-element-transition;
+
+    &::placeholder {
+      color: $font-color-4;
+    }
+
+    &:hover {
+      border-color: rgba(61, 214, 140, 0.4);
+    }
+
+    &:focus {
+      border-color: $accent;
+    }
+  }
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 4px;
+}
+
+.chip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid $border-subtle;
+  background: $color-bg-3;
+  color: $font-color-2;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  @include active-element-transition;
+
+  &:hover:not(:disabled) {
+    border-color: rgba(61, 214, 140, 0.4);
+    color: $font-color-1;
+  }
+
+  &.primary.active:not(:disabled) {
+    @include active-element;
+    color: $font-color-1;
+  }
+
+  &:disabled {
+    cursor: default;
+    opacity: 0.45;
+  }
 }

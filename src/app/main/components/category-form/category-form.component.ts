@@ -1,9 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDialogRef } from '@angular/material/dialog';
-import { MatInput } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { Category, CategoryForm } from '../../model/category.model';
 import { Observable, tap } from 'rxjs';
 import { isNil } from '../../utils/is-nil.util';
@@ -16,28 +14,27 @@ import { EditModalBase } from '../../utils/edit-modal.base';
   styleUrl: './category-form.component.scss',
   imports: [
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInput,
-    MatButtonModule,
+    MatIconModule,
   ],
 })
 export class CategoryFormComponent extends EditModalBase implements OnInit {
   private dialogRef: MatDialogRef<CategoryFormComponent> = inject(MatDialogRef);
 
   public categoryForm: FormGroup<CategoryForm>;
+  public isEdit = false;
 
   public ngOnInit(): void {
+    this.isEdit = !isNil(this.dialogData?.id);
     this.categoryForm = new FormGroup({
       name: new FormControl<string>('', Validators.required),
       position: new FormControl<number>(null),
     });
-    this.fillEditForm().subscribe();
+    if (this.isEdit) {
+      this.fillEditForm().subscribe();
+    }
   }
 
   public fillEditForm(): Observable<Category> {
-    if (isNil(this.dialogData.id)) {
-      return void 0;
-    }
     return this.mainService.getCategoryById(this.dialogData.id).pipe(
       tap((category: Category) => {
         this.categoryForm.patchValue(category);
@@ -47,6 +44,13 @@ export class CategoryFormComponent extends EditModalBase implements OnInit {
   }
 
   public submitForm(): void {
+    if (!this.categoryForm?.valid) {
+      return;
+    }
     this.dialogRef.close(this.categoryForm.value);
+  }
+
+  public close(): void {
+    this.dialogRef.close();
   }
 }

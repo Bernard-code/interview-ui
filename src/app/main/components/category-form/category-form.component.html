@@ -1,24 +1,29 @@
 <form [formGroup]="categoryForm" class="form">
-  <mat-form-field appearance="outline">
-    <mat-label>Category name</mat-label>
-    <input
-      formControlName="name"
-      matInput
-      placeholder="Name"
-    >
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Position</mat-label>
-    <input
-      formControlName="position"
-      matInput
-      placeholder="Position"
-    >
-  </mat-form-field>
-  <button
-    [disabled]="!categoryForm.valid"
-    (click)="submitForm()"
-    type="button"
-    mat-button
-  >Submit</button>
+  <header class="form-head">
+    <p class="kicker">{{ isEdit ? 'Edit category' : 'New category' }}</p>
+    <button type="button" class="icon-btn" (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <label class="field">
+    <span>Name</span>
+    <input formControlName="name" type="text" placeholder="e.g. Java" autocomplete="off">
+  </label>
+
+  <label class="field">
+    <span>Position</span>
+    <input formControlName="position" type="number" min="0" placeholder="1">
+  </label>
+
+  <div class="actions">
+    <button type="button" class="chip-btn" (click)="close()">Cancel</button>
+    <button
+      type="button"
+      class="chip-btn primary"
+      [class.active]="categoryForm.valid"
+      [disabled]="!categoryForm.valid"
+      (click)="submitForm()"
+    >Save</button>
+  </div>
 </form>
