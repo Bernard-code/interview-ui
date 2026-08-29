@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { MatDrawer, MatDrawerContainer, MatDrawerContent, MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
-import { Router, RouterOutlet } from '@angular/router';
-import { PresentationItem } from '../../model/presentation-item.model';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-main-screen',
@@ -10,24 +10,17 @@ import { PresentationItem } from '../../model/presentation-item.model';
   styleUrl: './main-screen.component.scss',
   imports: [
     RouterOutlet,
-    MatDrawer,
-    MatDrawerContainer,
-    MatDrawerContent,
-    MatSidenavModule,
-    MatListModule,
+    RouterLink,
+    RouterLinkActive,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainScreenComponent {
-  private router = inject(Router);
-
   public navItems = [
-    {name: 'Home', url: ''},
-    {name: 'ToDo', url: '/todo'},
-    {name: 'Questions', url: `/questions`},
+    { name: 'Questions', url: '/questions', icon: 'quiz' },
+    { name: 'ToDo', url: '/todo', icon: 'checklist' },
   ];
-
-  public navigate(url: string): void {
-    this.router.navigate([url]);
-  }
 }

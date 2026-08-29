@@ -1,84 +1,204 @@
 @import '../../../styles/variables';
 
-.main-container {
-  height: 100vh;
-
-  .main-nav {
-    background: $color-bg-3;
-    width: 250px;
-    border-radius: 0;
-
-    &.category-nav {
-      background: $color-bg-2;
-    }
-
-    &.question-nav {
-      background: $color-bg-3;
-    }
-  }
+:host {
+  display: block;
+  height: 100%;
 }
 
-.main-content {
-  background: $color-bg-4;
-}
-
-.title-container {
+.page {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  background: $color-bg-1;
+}
 
-  .title {
-    color: $font-color-1;
-    margin: 10px;
-    text-transform: capitalize;
+.breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 0 20px;
+  border-bottom: 1px solid $border-subtle;
+  color: $font-color-3;
+  font-size: 13px;
+}
+
+.crumb {
+  border: 0;
+  background: transparent;
+  color: $font-color-3;
+  font: inherit;
+  padding: 0;
+  max-width: 280px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:not(span) {
+    cursor: pointer;
   }
 
-  .add-icon {
-    color: $font-color-1;
-    margin-right: 24px;
-    transition: color .3s ease;
+  &:hover:not(span) {
+    color: $accent;
+  }
 
-    &:hover {
-      color: $hover-item;
-      cursor: pointer;
-    }
+  &.current {
+    color: $font-color-1;
   }
 }
 
-.delete-btn {
+.sep {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: $font-color-4;
+}
+
+.category-bar {
+  padding: 12px 20px 8px;
+  border-bottom: 1px solid $border-subtle;
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: $font-color-3;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+
+  button {
+    color: $font-color-2;
+  }
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 0 4px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  padding: 6px 8px 6px 12px;
+  border-radius: 999px;
+  border: 1px solid $border-subtle;
+  background: $color-bg-2;
   color: $font-color-2;
-  font-size: 20px;
-  transition: color .3s ease;
-  padding: 0 10px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  @include active-element-transition;
+
+  &:hover {
+    border-color: rgba(61, 214, 140, 0.4);
+    color: $font-color-1;
+  }
+
+  &.active {
+    @include active-element;
+    color: $font-color-1;
+  }
+}
+
+.chip-del,
+.q-del {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+  color: $font-color-4;
 
   &:hover {
     color: $delete-red;
-    cursor: pointer;
   }
 }
 
-.category {
-  transition: color .3s ease;
-  width: 99%;
+.workspace {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  flex: 1;
+  min-height: 0;
+}
+
+.question-pane {
+  overflow: auto;
+  padding: 8px 10px 16px;
+  border-right: 1px solid $border-subtle;
+  background: $color-bg-2;
+}
+
+.q-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 8px 8px 10px;
+  margin-bottom: 2px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: transparent;
   color: $font-color-2;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  @include active-element-transition;
 
   &:hover {
-    color: $hover-item;
-    cursor: pointer;
+    background: rgba(255, 255, 255, 0.04);
+    color: $font-color-1;
+  }
+
+  &.active {
+    @include active-element;
+    color: $font-color-1;
   }
 }
 
-.category-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+.q-index {
+  flex-shrink: 0;
+  width: 18px;
+  color: $font-color-4;
+  font-size: 12px;
 }
 
-.list-item {
-  @include active-element-transition;
-  &.active {
-    @include active-element;
+.q-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+}
+
+.empty {
+  margin: 16px 8px;
+  color: $font-color-4;
+  font-size: 13px;
+}
+
+.detail-pane {
+  overflow: auto;
+  background: $color-bg-1;
+}
+
+@media (max-width: 800px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(160px, 32%) 1fr;
+  }
+
+  .question-pane {
+    border-right: 0;
+    border-bottom: 1px solid $border-subtle;
+  }
+
+  .crumb-question {
+    display: none;
   }
 }

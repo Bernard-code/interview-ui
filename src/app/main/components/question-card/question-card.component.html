@@ -1,11 +1,25 @@
 <div class="container">
-  <h3 class="name">{{question?.name}}</h3>
-  <div class="btn-group">
-    <button class="btn" mat-raised-button (click)="flipAnswer()">Answer</button>
-    <button class="btn" mat-raised-button (click)="move(false)"><mat-icon>chevron_left</mat-icon></button>
-    <button class="btn" mat-raised-button (click)="move()"><mat-icon>chevron_right</mat-icon></button>
-  </div>
-  @if (showAnswer) {
-    <p class="answer" [innerHTML]="question?.answer"></p>
+  @if (question) {
+    <p class="kicker">Question</p>
+    <h2 class="name">{{ question.name }}</h2>
+    <div class="btn-group">
+      <button class="btn" mat-stroked-button type="button" (click)="flipAnswer()">
+        {{ showAnswer ? 'Hide answer' : 'Show answer' }}
+      </button>
+      <button class="btn icon-btn" mat-stroked-button type="button" (click)="move(false)" aria-label="Previous question">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+      <button class="btn icon-btn" mat-stroked-button type="button" (click)="move()" aria-label="Next question">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    @if (showAnswer) {
+      <div class="answer" [innerHTML]="question.answer"></div>
+    }
+  } @else {
+    <div class="placeholder">
+      <mat-icon>menu_book</mat-icon>
+      <p>Select a category, then a question.</p>
+    </div>
   }
 </div>

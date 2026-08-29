@@ -1,32 +1,61 @@
 @import '../../../styles/variables';
 
-.main-container {
+.shell {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
+  background: $color-bg-1;
+}
 
-  .main-nav {
-    background: $color-bg-1;
-    width: 150px;
-    border-radius: 0;
+.topbar {
+  height: 56px;
+  padding: 0 16px;
+  --mat-toolbar-container-background-color: #{$color-bg-2};
+  --mat-toolbar-container-text-color: #{$font-color-1};
+  background: $color-bg-2;
+  border-bottom: 1px solid $border-subtle;
+  color: $font-color-1;
+  gap: 24px;
+}
 
-    .list-item {
-      .nav-item {
-        color: $font-color-4;
-        transition: color .3s ease;
-      }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: $font-color-1;
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 
-      &:hover {
-        cursor: pointer;
-        color: $font-color-1;
-
-        .nav-item {
-          color: $font-color-1;
-        }
-      }
-    }
+  mat-icon {
+    color: $accent;
   }
 }
 
-.main-content {
-  background: $color-bg-4;
-  color: $font-color-1;
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-link {
+  color: $font-color-3;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+  }
+
+  &.active {
+    color: $font-color-1;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.content {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
 }

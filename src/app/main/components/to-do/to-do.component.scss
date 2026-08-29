@@ -1,5 +1,11 @@
 @import '../../../styles/variables';
 
 .container {
-  padding: 10px;
+  max-width: 720px;
+  padding: 32px 28px;
+  color: $font-color-2;
+
+  ul {
+    line-height: 1.6;
+  }
 }

@@ -1,14 +1,24 @@
-<mat-drawer-container class="main-container">
-  <mat-drawer mode="side" opened class="main-nav">
-    <mat-list role="list">
-    @for (item of navItems; track $index) {
-      <mat-list-item class="list-item" (click)="navigate(item.url)">
-        <span class="nav-item">{{ item.name }}</span>
-      </mat-list-item>
-    }
-  </mat-list>
-  </mat-drawer>
-  <mat-drawer-content class="main-content">
+<div class="shell">
+  <mat-toolbar class="topbar">
+    <a class="brand" routerLink="/questions">
+      <mat-icon>school</mat-icon>
+      <span>Interview</span>
+    </a>
+    <nav class="nav">
+      @for (item of navItems; track item.url) {
+        <a
+          mat-button
+          class="nav-link"
+          [routerLink]="item.url"
+          routerLinkActive="active"
+        >
+          <mat-icon>{{ item.icon }}</mat-icon>
+          {{ item.name }}
+        </a>
+      }
+    </nav>
+  </mat-toolbar>
+  <main class="content">
     <router-outlet></router-outlet>
-  </mat-drawer-content>
-</mat-drawer-container>
+  </main>
+</div>

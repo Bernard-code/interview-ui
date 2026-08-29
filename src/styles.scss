@@ -1,6 +1,17 @@
-html, body { height: 100%; }
+@import './app/styles/variables';
+
+html, body {
+  height: 100%;
+}
+
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
-  color: #fff;
+  color: $font-color-1;
+  background: $color-bg-1;
+}
+
+app-root {
+  display: block;
+  height: 100%;
 }

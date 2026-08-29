@@ -1,44 +1,95 @@
-<mat-drawer-container class="main-container">
-  <mat-drawer mode="side" opened class="main-nav {{presentationItem()}}-nav">
-    <div class="title-container">
-      <h3 class="title">{{ presentationItem() }}</h3>
-      <mat-icon class="add-icon" (click)="openEditModal()">add</mat-icon>
+@let categoryId = activeCategoryId$ | async;
+@let questionId = activeQuestionId$ | async;
+@let categories = categories$ | async;
+@let questions = filteredQuestions$ | async;
+@let selectedCategory = selectedCategory$ | async;
+@let selectedQuestion = selectedQuestion$ | async;
+
+<div class="page">
+  <nav class="breadcrumbs" aria-label="Breadcrumb">
+    <button type="button" class="crumb" (click)="clearSelection()">Questions</button>
+    @if (selectedCategory) {
+      <mat-icon class="sep">chevron_right</mat-icon>
+      <span class="crumb current">{{ selectedCategory.name }}</span>
+    }
+    @if (selectedQuestion) {
+      <mat-icon class="sep">chevron_right</mat-icon>
+      <span class="crumb current crumb-question">{{ selectedQuestion.name }}</span>
+    }
+  </nav>
+
+  <section class="category-bar">
+    <div class="section-head">
+      <span>Categories</span>
+      <button
+        mat-icon-button
+        type="button"
+        aria-label="Add category"
+        (click)="openEditModal(undefined, PresentationItem.Category)"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
     </div>
-    <mat-list role="list">
-      @for (item of items$ | async; track item.id; let index = $index) {
-        <mat-list-item class="list-item"
-            [ngClass]="{'active':
-              ((activeCategoryId$ | async) === item.id && presentationItem() === PresentationItem.Category)
-              || ((activeQuestionId$ | async) === item.id && presentationItem() === PresentationItem.Question)
-            }">
-          <div class="category-row">
-            <div
-              class="category"
-              (click)="openItem(item.id)"
-              (dblclick)="openEditModal(item.id)"
-            >
-            @if (presentationItem() === PresentationItem.Question) {
-              <span>{{index + 1}}. </span>
-            }
-            {{ item.name }}
-            </div>
-            <mat-icon class="delete-btn" (click)="deleteItem(item.id, item.name)">close</mat-icon>
-          </div>
-        </mat-list-item>
+    <div class="chips">
+      @for (item of categories; track item.id) {
+        <button
+          type="button"
+          class="chip"
+          [class.active]="categoryId === item.id"
+          (click)="openItem(item.id, PresentationItem.Category)"
+          (dblclick)="openEditModal(item.id, PresentationItem.Category)"
+        >
+          {{ item.name }}
+          <mat-icon
+            class="chip-del"
+            (click)="deleteItem($event, item.id, item.name, PresentationItem.Category)"
+          >close</mat-icon>
+        </button>
       }
-      <!-- TODO: dodac kategorie pusta-->
-      <!--    <mat-list-item>-->
-      <!--    </mat-list-item>-->
-    </mat-list>
-  </mat-drawer>
-  <mat-drawer-content class="main-content">
-    @if (presentationItem() === PresentationItem.Category) {
-      <app-listed-view
-        [presentationItem]="PresentationItem.Question"
-      ></app-listed-view>
-    }
-    @if (presentationItem() === PresentationItem.Question) {
+    </div>
+  </section>
+
+  <div class="workspace">
+    <aside class="question-pane">
+      <div class="section-head">
+        <span>Questions</span>
+        <button
+          mat-icon-button
+          type="button"
+          aria-label="Add question"
+          [disabled]="isNil(categoryId)"
+          (click)="openEditModal(undefined, PresentationItem.Question)"
+        >
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+
+      @if (isNil(categoryId)) {
+        <p class="empty">Select a category</p>
+      } @else {
+        @for (item of questions; track item.id; let index = $index) {
+          <button
+            type="button"
+            class="q-item"
+            [class.active]="questionId === item.id"
+            (click)="openItem(item.id, PresentationItem.Question)"
+            (dblclick)="openEditModal(item.id, PresentationItem.Question)"
+          >
+            <span class="q-index">{{ index + 1 }}</span>
+            <span class="q-name">{{ item.name }}</span>
+            <mat-icon
+              class="q-del"
+              (click)="deleteItem($event, item.id, item.name, PresentationItem.Question)"
+            >close</mat-icon>
+          </button>
+        } @empty {
+          <p class="empty">No questions yet</p>
+        }
+      }
+    </aside>
+
+    <section class="detail-pane">
       <app-question-card></app-question-card>
-    }
-  </mat-drawer-content>
-</mat-drawer-container>
+    </section>
+  </div>
+</div>

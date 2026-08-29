@@ -39,25 +39,34 @@ export class StateService {
           );
         }
         questions = questions.sort((a, b) => a.position - b.position);
-        this.highestPosition = questions[questions.length - 1].position;
+        this.highestPosition = questions[questions.length - 1]?.position ?? 0;
         this.questions$.next(questions);
       }),
     );
   }
 
-  public getNextOrPrevQuestionId(id: number, next: boolean = true): number {
-    let nextQuestionIndex: number;
-    const currentQuestions: Question[] = this.questions$.getValue();
-    this.questions$.getValue().every((question: Question, index: number) => {
-      if (question.id === id) {
-        nextQuestionIndex = next ? index + 1 : index - 1;
-        return false;
-      }
-      return true;
-    });
-    if (next && nextQuestionIndex === currentQuestions.length || nextQuestionIndex < 0) {
-      return next ? currentQuestions[0].id : currentQuestions[currentQuestions.length - 1].id;
+  public getNextOrPrevQuestionId(id: number, next: boolean = true): number | null {
+    const categoryId = this.currentCategoryId$.getValue();
+    const currentQuestions: Question[] = this.questions$.getValue()
+      .filter((question: Question) => isNil(categoryId) || Number(question.category) === Number(categoryId))
+      .sort((a, b) => a.position - b.position);
+
+    if (!currentQuestions.length) {
+      return null;
     }
-    return currentQuestions[nextQuestionIndex].id;
+
+    const currentIndex = currentQuestions.findIndex((question: Question) => question.id === id);
+    if (currentIndex === -1) {
+      return currentQuestions[0].id;
+    }
+
+    const nextIndex = next ? currentIndex + 1 : currentIndex - 1;
+    if (nextIndex >= currentQuestions.length) {
+      return currentQuestions[0].id;
+    }
+    if (nextIndex < 0) {
+      return currentQuestions[currentQuestions.length - 1].id;
+    }
+    return currentQuestions[nextIndex].id;
   }
 }
