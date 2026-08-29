@@ -1,25 +1,46 @@
-<div class="container">
+<div class="wrap">
   @if (question) {
-    <p class="kicker">Question</p>
-    <h2 class="name">{{ question.name }}</h2>
-    <div class="btn-group">
-      <button class="btn" mat-stroked-button type="button" (click)="flipAnswer()">
+    <article class="card">
+      <header class="card-head">
+        <p class="kicker">
+          Question
+          @if (questionCount) {
+            <span class="count">{{ questionIndex }} / {{ questionCount }}</span>
+          }
+        </p>
+        <div class="nav-btns">
+          <button type="button" class="icon-btn" (click)="move(false)" aria-label="Previous question">
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          <button type="button" class="icon-btn" (click)="move()" aria-label="Next question">
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      </header>
+
+      <h2 class="name">{{ question.name }}</h2>
+
+      <button
+        type="button"
+        class="chip-btn"
+        [class.active]="showAnswer"
+        (click)="flipAnswer()"
+      >
+        <mat-icon>{{ showAnswer ? 'visibility_off' : 'visibility' }}</mat-icon>
         {{ showAnswer ? 'Hide answer' : 'Show answer' }}
       </button>
-      <button class="btn icon-btn" mat-stroked-button type="button" (click)="move(false)" aria-label="Previous question">
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      <button class="btn icon-btn" mat-stroked-button type="button" (click)="move()" aria-label="Next question">
-        <mat-icon>chevron_right</mat-icon>
-      </button>
-    </div>
-    @if (showAnswer) {
-      <div class="answer" [innerHTML]="question.answer"></div>
-    }
+
+      @if (showAnswer) {
+        <div class="answer" [innerHTML]="question.answer"></div>
+      }
+    </article>
   } @else {
     <div class="placeholder">
-      <mat-icon>menu_book</mat-icon>
-      <p>Select a category, then a question.</p>
+      <div class="placeholder-icon">
+        <mat-icon>menu_book</mat-icon>
+      </div>
+      <p class="placeholder-title">No question selected</p>
+      <p class="placeholder-hint">Pick a category, then a question from the list.</p>
     </div>
   }
 </div>
