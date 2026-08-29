@@ -1,15 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogClose, MatDialogRef } from '@angular/material/dialog';
-import { MatButtonModule } from '@angular/material/button';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-delete-confirm',
   imports: [
-    MatButtonModule,
-    MatDialogClose,
+    MatIconModule,
   ],
   templateUrl: './delete-confirm.component.html',
-  styleUrl: './delete-confirm.component.scss'
+  styleUrl: './delete-confirm.component.scss',
 })
 export class DeleteConfirmComponent {
   private dialogRef: MatDialogRef<DeleteConfirmComponent> = inject(MatDialogRef);
@@ -18,5 +17,9 @@ export class DeleteConfirmComponent {
 
   public confirm(): void {
     this.dialogRef.close(true);
+  }
+
+  public close(): void {
+    this.dialogRef.close();
   }
 }

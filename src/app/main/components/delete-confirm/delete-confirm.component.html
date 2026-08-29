@@ -1,7 +1,16 @@
-<div class="container">
-  <p class="message">Delete {{data.name}}?</p>
-  <div class="btn-box">
-    <button mat-raised-button matDialogClose>No</button>
-    <button mat-raised-button (click)="confirm()" class="confirm-btn">Yes</button>
+<div class="dialog">
+  <header class="form-head">
+    <p class="kicker">Delete</p>
+    <button type="button" class="icon-btn" (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <p class="message">Delete <span class="name">{{ data.name }}</span>?</p>
+  <p class="hint">This cannot be undone.</p>
+
+  <div class="actions">
+    <button type="button" class="chip-btn" (click)="close()">Cancel</button>
+    <button type="button" class="chip-btn danger" (click)="confirm()">Delete</button>
   </div>
 </div>

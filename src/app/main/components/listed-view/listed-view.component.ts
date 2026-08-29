@@ -135,7 +135,12 @@ export class ListedViewComponent implements OnInit {
     type: PresentationItem,
   ): void {
     event.stopPropagation();
-    this.matDialog.open(DeleteConfirmComponent, { width: '400px', data: { name } })
+    this.matDialog.open(DeleteConfirmComponent, {
+      width: '400px',
+      data: { name },
+      panelClass: 'app-dialog',
+      backdropClass: 'app-dialog-backdrop',
+    })
       .afterClosed().pipe(
         filter(Boolean),
         switchMap(() =>

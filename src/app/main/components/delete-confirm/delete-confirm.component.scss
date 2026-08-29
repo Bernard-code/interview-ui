@@ -1,22 +1,111 @@
 @import '../../../styles/variables';
 
-.container {
-  padding: 15px;
+:host {
+  display: block;
+}
+
+.dialog {
   display: flex;
   flex-direction: column;
+  gap: 8px;
+  padding: 24px 28px 28px;
+}
 
-  .message {
-    padding: 0 10px;
-    color: $color-bg-2;
+.form-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.kicker {
+  margin: 0;
+  color: $font-color-3;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid $border-subtle;
+  border-radius: 8px;
+  background: transparent;
+  color: $font-color-2;
+  cursor: pointer;
+  @include active-element-transition;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
   }
 
-  .btn-box {
-    display: flex;
-    justify-content: space-between;
+  &:hover {
+    border-color: rgba(255, 123, 123, 0.5);
+    color: $font-color-1;
+  }
+}
+
+.message {
+  margin: 0;
+  color: $font-color-2;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.name {
+  color: $font-color-1;
+  font-weight: 600;
+}
+
+.hint {
+  margin: 0 0 8px;
+  color: $font-color-4;
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 8px;
+}
+
+.chip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid $border-subtle;
+  background: $color-bg-3;
+  color: $font-color-2;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  @include active-element-transition;
+
+  &:hover {
+    border-color: rgba(61, 214, 140, 0.4);
+    color: $font-color-1;
   }
 
-  .confirm-btn {
-    background: $confirm-button;
-    color: $color-bg-2;
+  &.danger {
+    border-color: rgba(255, 123, 123, 0.35);
+    background: rgba(255, 123, 123, 0.12);
+    color: $delete-red;
+
+    &:hover {
+      border-color: rgba(255, 123, 123, 0.6);
+      color: #ff9c9c;
+    }
   }
 }
