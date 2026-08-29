@@ -1,40 +1,49 @@
 <form [formGroup]="questionForm" class="form">
-  <mat-form-field appearance="outline">
-    <mat-label>Question name</mat-label>
-    <input
-      formControlName="name"
-      matInput
-      placeholder="Name"
-    >
-  </mat-form-field>
-  <angular-editor
-    [config]="editorConfig"
-    formControlName="answer"
-    class="text-editor"
-  ></angular-editor>
-  <mat-form-field appearance="outline">
-    <mat-label>Position</mat-label>
-    <input
-      formControlName="position"
-      matInput
-      placeholder="Position"
-    >
-  </mat-form-field>
-  <mat-form-field appearance="outline">
-    <mat-label>Category</mat-label>
-    <mat-select
-      formControlName="category"
-      placeholder="Category"
-    >
-      @for (category of categories; track category.id){
-        <mat-option [value]="category.id">{{category.name}}</mat-option>
-      }
-    </mat-select>
-  </mat-form-field>
-  <button
-    [disabled]="!questionForm.valid"
-    (click)="submitForm()"
-    type="button"
-    mat-button
-  >Submit</button>
+  <header class="form-head">
+    <p class="kicker">{{ isEdit ? 'Edit question' : 'New question' }}</p>
+    <button type="button" class="icon-btn" (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <label class="field">
+    <span>Name</span>
+    <input formControlName="name" type="text" placeholder="e.g. What is a closure?" autocomplete="off">
+  </label>
+
+  <label class="field">
+    <span>Answer</span>
+    <angular-editor
+      [config]="editorConfig"
+      formControlName="answer"
+      class="text-editor"
+    ></angular-editor>
+  </label>
+
+  <div class="row">
+    <label class="field">
+      <span>Position</span>
+      <input formControlName="position" type="number" min="0" placeholder="1">
+    </label>
+
+    <label class="field">
+      <span>Category</span>
+      <select formControlName="category">
+        @for (category of categories; track category.id) {
+          <option [value]="category.id">{{ category.name }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="chip-btn" (click)="close()">Cancel</button>
+    <button
+      type="button"
+      class="chip-btn primary"
+      [class.active]="questionForm.valid"
+      [disabled]="!questionForm.valid"
+      (click)="submitForm()"
+    >Save</button>
+  </div>
 </form>
