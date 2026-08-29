@@ -1,7 +1,8 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { MainService } from '../../services/main.service';
 import { MatDialog } from '@angular/material/dialog';
-import { combineLatest, filter, map, Observable, switchMap } from 'rxjs';
+import { CdkDragDrop, CdkDrag, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { combineLatest, filter, forkJoin, map, Observable, switchMap } from 'rxjs';
 import { Category } from '../../model/category.model';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryFormComponent } from '../category-form/category-form.component';
@@ -25,6 +26,9 @@ import { QuestionCardComponent } from '../question-card/question-card.component'
     MatIconModule,
     AsyncPipe,
     QuestionCardComponent,
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
   ],
 })
 export class ListedViewComponent implements OnInit {
@@ -106,6 +110,41 @@ export class ListedViewComponent implements OnInit {
             ? this.mainService.createCategory(data as Category)
             : this.mainService.editCategory(id, data as Category)
       ),
+      switchMap(() => this.stateService.loadData()),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
+  }
+
+  public reorderQuestions(event: CdkDragDrop<Question[]>): void {
+    if (event.previousIndex === event.currentIndex) {
+      return;
+    }
+
+    const original = event.container.data ?? [];
+    const reordered = [...original];
+    moveItemInArray(reordered, event.previousIndex, event.currentIndex);
+
+    const updates = reordered
+      .map((question: Question, index: number) => ({ ...question, position: index + 1 }))
+      .filter((question: Question) => {
+        const previous = original.find((item: Question) => item.id === question.id);
+        return previous?.position !== question.position;
+      });
+
+    if (!updates.length) {
+      return;
+    }
+
+    const updatedById = new Map(updates.map((question: Question) => [question.id, question]));
+    this.stateService.questions$.next(
+      this.stateService.questions$.getValue().map((question: Question) =>
+        updatedById.get(question.id) ?? question
+      ),
+    );
+
+    forkJoin(updates.map((question: Question) =>
+      this.mainService.editQuestion(question.id, question)
+    )).pipe(
       switchMap(() => this.stateService.loadData()),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();

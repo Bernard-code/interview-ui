@@ -67,24 +67,32 @@
       @if (isNil(categoryId)) {
         <p class="empty">Select a category</p>
       } @else {
-        @for (item of questions; track item.id; let index = $index) {
-          <button
-            type="button"
-            class="q-item"
-            [class.active]="questionId === item.id"
-            (click)="openItem(item.id, PresentationItem.Question)"
-            (dblclick)="openEditModal(item.id, PresentationItem.Question)"
-          >
-            <span class="q-index">{{ index + 1 }}</span>
-            <span class="q-name">{{ item.name }}</span>
-            <mat-icon
-              class="q-del"
-              (click)="deleteItem($event, item.id, item.name, PresentationItem.Question)"
-            >close</mat-icon>
-          </button>
-        } @empty {
-          <p class="empty">No questions yet</p>
-        }
+        <div
+          class="q-list"
+          cdkDropList
+          [cdkDropListData]="questions ?? []"
+          (cdkDropListDropped)="reorderQuestions($event)"
+        >
+          @for (item of questions; track item.id; let index = $index) {
+            <div
+              class="q-item"
+              cdkDrag
+              [class.active]="questionId === item.id"
+              (click)="openItem(item.id, PresentationItem.Question)"
+              (dblclick)="openEditModal(item.id, PresentationItem.Question)"
+            >
+              <mat-icon class="q-handle" cdkDragHandle>drag_indicator</mat-icon>
+              <span class="q-index">{{ index + 1 }}</span>
+              <span class="q-name">{{ item.name }}</span>
+              <mat-icon
+                class="q-del"
+                (click)="deleteItem($event, item.id, item.name, PresentationItem.Question)"
+              >close</mat-icon>
+            </div>
+          } @empty {
+            <p class="empty">No questions yet</p>
+          }
+        </div>
       }
     </aside>
 

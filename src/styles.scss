@@ -31,3 +31,16 @@ app-root {
   box-shadow: none !important;
   overflow: hidden;
 }
+
+.q-item.cdk-drag-preview {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-sizing: border-box;
+  padding: 8px 8px 8px 6px;
+  border: 1px solid rgba(61, 214, 140, 0.35);
+  border-radius: 8px;
+  background: #1c1f22;
+  color: #f2f3f4;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}

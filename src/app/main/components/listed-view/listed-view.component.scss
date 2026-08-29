@@ -133,12 +133,18 @@
   background: $color-bg-2;
 }
 
+.q-list {
+  display: flex;
+  flex-direction: column;
+}
+
 .q-item {
   display: flex;
   align-items: center;
   gap: 8px;
   width: 100%;
-  padding: 8px 8px 8px 10px;
+  box-sizing: border-box;
+  padding: 8px 8px 8px 6px;
   margin-bottom: 2px;
   border: 1px solid transparent;
   border-radius: 8px;
@@ -157,6 +163,31 @@
   &.active {
     @include active-element;
     color: $font-color-1;
+  }
+
+  &.cdk-drag-placeholder {
+    opacity: 0.35;
+  }
+
+  &.cdk-drag-animating {
+    transition: transform 150ms ease;
+  }
+}
+
+.q-list.cdk-drop-list-dragging .q-item:not(.cdk-drag-placeholder) {
+  transition: transform 150ms ease;
+}
+
+.q-handle {
+  flex-shrink: 0;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: $font-color-4;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
   }
 }
 
