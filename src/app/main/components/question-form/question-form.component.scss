@@ -99,6 +99,21 @@
     }
   }
 
+  .hint {
+    margin: 0;
+    color: $font-color-4;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+    line-height: 1.45;
+
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+    }
+  }
+
   select {
     appearance: none;
     background-image: linear-gradient(45deg, transparent 50%, #{$font-color-3} 50%),

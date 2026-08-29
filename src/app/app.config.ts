@@ -8,6 +8,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { provideStore } from '@ngrx/store';
 import { provideEffects } from '@ngrx/effects';
 import { provideServiceWorker } from '@angular/service-worker';
+import { provideHighlightOptions } from 'ngx-highlightjs';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,6 +17,9 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideAnimationsAsync(),
     provideHttpClient(),
+    provideHighlightOptions({
+      fullLibraryLoader: () => import('highlight.js'),
+    }),
     provideStore(),
     provideEffects(), provideServiceWorker('ngsw-worker.js', {
             enabled: !isDevMode(),

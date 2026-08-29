@@ -1,5 +1,5 @@
 <div class="wrap">
-  @if (question) {
+  @if (question(); as current) {
     <article class="card">
       <header class="card-head">
         <p class="kicker">
@@ -18,20 +18,20 @@
         </div>
       </header>
 
-      <h2 class="name">{{ question.name }}</h2>
+      <h2 class="name">{{ current.name }}</h2>
 
       <button
         type="button"
         class="chip-btn"
-        [class.active]="showAnswer"
+        [class.active]="showAnswer()"
         (click)="flipAnswer()"
       >
-        <mat-icon>{{ showAnswer ? 'visibility_off' : 'visibility' }}</mat-icon>
-        {{ showAnswer ? 'Hide answer' : 'Show answer' }}
+        <mat-icon>{{ showAnswer() ? 'visibility_off' : 'visibility' }}</mat-icon>
+        {{ showAnswer() ? 'Hide answer' : 'Show answer' }}
       </button>
 
-      @if (showAnswer) {
-        <div class="answer" [innerHTML]="question.answer"></div>
+      @if (showAnswer()) {
+        <div class="answer" [innerHTML]="trustedAnswer()"></div>
       }
     </article>
   } @else {
