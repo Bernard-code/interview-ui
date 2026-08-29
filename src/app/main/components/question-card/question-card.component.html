@@ -20,15 +20,48 @@
 
       <h2 class="name">{{ current.name }}</h2>
 
-      <button
-        type="button"
-        class="chip-btn"
-        [class.active]="showAnswer()"
-        (click)="flipAnswer()"
-      >
-        <mat-icon>{{ showAnswer() ? 'visibility_off' : 'visibility' }}</mat-icon>
-        {{ showAnswer() ? 'Hide answer' : 'Show answer' }}
-      </button>
+      <div class="card-actions">
+        <button
+          type="button"
+          class="chip-btn"
+          [class.active]="showAnswer()"
+          (click)="flipAnswer()"
+        >
+          <mat-icon>{{ showAnswer() ? 'visibility_off' : 'visibility' }}</mat-icon>
+          {{ showAnswer() ? 'Hide answer' : 'Show answer' }}
+        </button>
+
+        <div class="score-btns">
+          <button
+            type="button"
+            class="score-btn good"
+            (click)="markAnswer('good')"
+            aria-label="Mark as good"
+          >
+            <mat-icon>thumb_up</mat-icon>
+            <span>{{ current.positiveCount ?? 0 }}</span>
+          </button>
+          <button
+            type="button"
+            class="score-btn bad"
+            (click)="markAnswer('bad')"
+            aria-label="Mark as bad"
+          >
+            <mat-icon>thumb_down</mat-icon>
+            <span>{{ current.negativeCount ?? 0 }}</span>
+          </button>
+          <button
+            type="button"
+            class="score-btn reset"
+            (click)="resetScores()"
+            [disabled]="!(current.positiveCount || current.negativeCount)"
+            aria-label="Reset both scores"
+          >
+            <mat-icon>restart_alt</mat-icon>
+            Reset
+          </button>
+        </div>
+      </div>
 
       @if (showAnswer()) {
         <div class="answer" [innerHTML]="trustedAnswer()"></div>

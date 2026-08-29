@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, combineLatest, EMPTY, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { MainService } from './main.service';
 import { Category } from '../model/category.model';
-import { Question } from '../model/question.model';
+import { AnswerMark, Question } from '../model/question.model';
 import { ListItem } from '../model/list-item.model';
 import { isNil } from '../utils/is-nil.util';
 
@@ -62,7 +62,7 @@ export class StateService {
   public loadQuestions(): Observable<Question[]> {
     return this.mainService.getQuestions().pipe(
       tap((questions: Question[]) => {
-        this.questions$.next(this.sortByPosition(questions));
+        this.questions$.next(this.sortByPosition(questions.map((question: Question) => this.normalizeQuestion(question))));
       }),
     );
   }
@@ -85,6 +85,25 @@ export class StateService {
     this.alwaysShowAnswers$.next(!this.alwaysShowAnswers$.getValue());
   }
 
+  public recordAnswerResult(questionId: number, mark: AnswerMark): void {
+    const question = this.getQuestion(questionId);
+    if (!question) {
+      return;
+    }
+    this.persistQuestionScores(question, {
+      positiveCount: question.positiveCount + (mark === 'good' ? 1 : 0),
+      negativeCount: question.negativeCount + (mark === 'bad' ? 1 : 0),
+    });
+  }
+
+  public resetAnswerScores(questionId: number): void {
+    const question = this.getQuestion(questionId);
+    if (!question) {
+      return;
+    }
+    this.persistQuestionScores(question, { positiveCount: 0, negativeCount: 0 });
+  }
+
   public selectNextQuestion(next: boolean = true): void {
     const nextId = this.getNextOrPrevQuestionId(this.currentQuestionId$.getValue(), next);
     if (!isNil(nextId)) {
@@ -100,9 +119,16 @@ export class StateService {
   }
 
   public saveQuestion(data: Partial<Question>, id?: number): Observable<[Category[], Question[]]> {
+    const existing = isNil(id) ? undefined : this.getQuestion(id);
+    const payload = this.normalizeQuestion({
+      ...existing,
+      ...data,
+      positiveCount: data.positiveCount ?? existing?.positiveCount ?? 0,
+      negativeCount: data.negativeCount ?? existing?.negativeCount ?? 0,
+    } as Question);
     const request = isNil(id)
-      ? this.mainService.createQuestion(data as Question)
-      : this.mainService.editQuestion(id, data as Question);
+      ? this.mainService.createQuestion(payload)
+      : this.mainService.editQuestion(id, payload);
     return request.pipe(switchMap(() => this.loadData()));
   }
 
@@ -220,5 +246,35 @@ export class StateService {
 
   private sortByPosition<T extends ListItem>(items: T[]): T[] {
     return [...items].sort((a, b) => a.position - b.position);
+  }
+
+  private persistQuestionScores(question: Question, scores: Pick<Question, 'positiveCount' | 'negativeCount'>): void {
+    const updated = this.normalizeQuestion({ ...question, ...scores });
+    this.patchQuestion(updated);
+    this.mainService.editQuestion(question.id, updated).subscribe({
+      next: (saved: Question) => {
+        this.patchQuestion(this.normalizeQuestion({
+          ...updated,
+          ...saved,
+          positiveCount: saved.positiveCount ?? updated.positiveCount,
+          negativeCount: saved.negativeCount ?? updated.negativeCount,
+        }));
+      },
+      error: () => this.patchQuestion(question),
+    });
+  }
+
+  private patchQuestion(updated: Question): void {
+    this.questions$.next(
+      this.questions$.getValue().map((item: Question) => item.id === updated.id ? updated : item),
+    );
+  }
+
+  private normalizeQuestion(question: Question): Question {
+    return {
+      ...question,
+      positiveCount: Math.max(0, Number(question.positiveCount) || 0),
+      negativeCount: Math.max(0, Number(question.negativeCount) || 0),
+    };
   }
 }

@@ -286,6 +286,27 @@
   font-size: 13px;
 }
 
+.q-scores {
+  display: flex;
+  flex-shrink: 0;
+  gap: 6px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+
+.q-score {
+  min-width: 1ch;
+  color: $font-color-4;
+
+  &.good.on {
+    color: $accent;
+  }
+
+  &.bad.on {
+    color: $delete-red;
+  }
+}
+
 .empty {
   margin: 16px 8px;
   color: $font-color-4;

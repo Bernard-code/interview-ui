@@ -84,6 +84,61 @@
   line-height: 1.3;
 }
 
+.card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.score-btns {
+  display: flex;
+  gap: 6px;
+}
+
+.score-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 52px;
+  padding: 6px 10px 6px 8px;
+  border-radius: 999px;
+  border: 1px solid $border-subtle;
+  background: $color-bg-3;
+  color: $font-color-2;
+  font: inherit;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  cursor: pointer;
+  @include active-element-transition;
+
+  mat-icon {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+  }
+
+  &.good:hover {
+    border-color: rgba(61, 214, 140, 0.45);
+    color: $accent;
+  }
+
+  &.bad:hover {
+    border-color: rgba(255, 123, 123, 0.45);
+    color: $delete-red;
+  }
+
+  &.reset:hover:not(:disabled) {
+    border-color: rgba(255, 255, 255, 0.2);
+    color: $font-color-1;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
 .chip-btn {
   display: inline-flex;
   align-items: center;

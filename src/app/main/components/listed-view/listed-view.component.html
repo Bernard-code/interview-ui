@@ -104,6 +104,10 @@
               <mat-icon class="q-handle" cdkDragHandle>drag_indicator</mat-icon>
               <span class="q-index">{{ index + 1 }}</span>
               <span class="q-name">{{ item.name }}</span>
+              <span class="q-scores" aria-label="Answer marks">
+                <span class="q-score good" [class.on]="!!item.positiveCount" title="Good">{{ item.positiveCount ?? 0 }}</span>
+                <span class="q-score bad" [class.on]="!!item.negativeCount" title="Bad">{{ item.negativeCount ?? 0 }}</span>
+              </span>
               <mat-icon
                 class="q-del"
                 (click)="deleteItem($event, item.id, item.name, PresentationItem.Question)"

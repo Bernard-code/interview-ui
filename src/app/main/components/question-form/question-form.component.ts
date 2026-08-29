@@ -56,6 +56,8 @@ export class QuestionFormComponent extends EditModalBase implements OnInit {
         question?.category ?? this.stateService.currentCategoryId$.getValue(),
         Validators.required,
       ),
+      positiveCount: new FormControl<number>(question?.positiveCount ?? 0),
+      negativeCount: new FormControl<number>(question?.negativeCount ?? 0),
     });
   }
 
@@ -75,6 +77,8 @@ export class QuestionFormComponent extends EditModalBase implements OnInit {
       ...value,
       category: Number(value.category),
       position: Number(value.position),
+      positiveCount: Number(value.positiveCount),
+      negativeCount: Number(value.negativeCount),
     });
   }
 

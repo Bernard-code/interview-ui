@@ -6,6 +6,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { StateService } from '../../services/state.service';
 import { highlightAnswerHtml } from '../../utils/highlight-answer.util';
+import { AnswerMark } from '../../model/question.model';
 
 @Component({
   selector: 'app-question-card',
@@ -29,6 +30,7 @@ export class QuestionCardComponent implements OnInit {
   public showAnswer = signal(false);
   public trustedAnswer = signal<SafeHtml>('');
   private alwaysShowAnswers = false;
+  private lastAnswerHtml = '';
 
   public ngOnInit(): void {
     combineLatest([
@@ -49,7 +51,11 @@ export class QuestionCardComponent implements OnInit {
         this.questionCount = inCategory.length;
         const index = inCategory.findIndex((item: Question) => item.id === questionId);
         this.questionIndex = index === -1 ? 0 : index + 1;
-        void this.renderAnswer(question?.answer ?? '');
+        const answerHtml = question?.answer ?? '';
+        if (answerHtml !== this.lastAnswerHtml) {
+          this.lastAnswerHtml = answerHtml;
+          void this.renderAnswer(answerHtml);
+        }
       }),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
@@ -61,6 +67,22 @@ export class QuestionCardComponent implements OnInit {
 
   public move(next: boolean = true): void {
     this.stateService.selectNextQuestion(next);
+  }
+
+  public markAnswer(mark: AnswerMark): void {
+    const id = this.question()?.id;
+    if (id == null) {
+      return;
+    }
+    this.stateService.recordAnswerResult(id, mark);
+  }
+
+  public resetScores(): void {
+    const id = this.question()?.id;
+    if (id == null) {
+      return;
+    }
+    this.stateService.resetAnswerScores(id);
   }
 
   private async renderAnswer(html: string): Promise<void> {
