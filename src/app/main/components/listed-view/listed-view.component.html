@@ -4,18 +4,31 @@
 @let questions = filteredQuestions$ | async;
 @let selectedCategory = selectedCategory$ | async;
 @let selectedQuestion = selectedQuestion$ | async;
+@let alwaysShowAnswers = alwaysShowAnswers$ | async;
 
 <div class="page">
   <nav class="breadcrumbs" aria-label="Breadcrumb">
-    <button type="button" class="crumb" (click)="clearSelection()">Questions</button>
-    @if (selectedCategory) {
-      <mat-icon class="sep">chevron_right</mat-icon>
-      <span class="crumb current">{{ selectedCategory.name }}</span>
-    }
-    @if (selectedQuestion) {
-      <mat-icon class="sep">chevron_right</mat-icon>
-      <span class="crumb current crumb-question">{{ selectedQuestion.name }}</span>
-    }
+    <div class="crumbs">
+      <button type="button" class="crumb" (click)="clearSelection()">Questions</button>
+      @if (selectedCategory) {
+        <mat-icon class="sep">chevron_right</mat-icon>
+        <span class="crumb current">{{ selectedCategory.name }}</span>
+      }
+      @if (selectedQuestion) {
+        <mat-icon class="sep">chevron_right</mat-icon>
+        <span class="crumb current crumb-question">{{ selectedQuestion.name }}</span>
+      }
+    </div>
+    <button
+      type="button"
+      class="mode-toggle"
+      [class.on]="alwaysShowAnswers"
+      (click)="toggleAlwaysShowAnswers()"
+      [attr.aria-pressed]="alwaysShowAnswers"
+    >
+      <span class="switch" [class.on]="alwaysShowAnswers" aria-hidden="true"></span>
+      Always show answers
+    </button>
   </nav>
 
   <section class="category-bar">

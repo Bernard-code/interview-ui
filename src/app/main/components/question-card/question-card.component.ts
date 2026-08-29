@@ -23,17 +23,22 @@ export class QuestionCardComponent implements OnInit {
   public questionIndex = 0;
   public questionCount = 0;
   public showAnswer = false;
+  private alwaysShowAnswers = false;
 
   public ngOnInit(): void {
     combineLatest([
       this.stateService.selectedQuestion$,
       this.stateService.questionsInCategory$,
+      this.stateService.alwaysShowAnswers$,
     ]).pipe(
-      tap(([question, inCategory]: [Question | undefined, Question[]]) => {
+      tap(([question, inCategory, alwaysShowAnswers]: [Question | undefined, Question[], boolean]) => {
         const questionId = question?.id ?? null;
         if (questionId !== this.questionId) {
-          this.showAnswer = false;
+          this.showAnswer = alwaysShowAnswers;
+        } else if (alwaysShowAnswers && !this.alwaysShowAnswers) {
+          this.showAnswer = true;
         }
+        this.alwaysShowAnswers = alwaysShowAnswers;
         this.questionId = questionId;
         this.question = question;
         this.questionCount = inCategory.length;

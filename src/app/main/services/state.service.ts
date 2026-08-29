@@ -16,6 +16,7 @@ export class StateService {
   public questions$ = new BehaviorSubject<Question[]>([]);
   public currentCategoryId$ = new BehaviorSubject<number | null>(null);
   public currentQuestionId$ = new BehaviorSubject<number | null>(null);
+  public alwaysShowAnswers$ = new BehaviorSubject<boolean>(false);
 
   public sortedCategories$: Observable<Category[]> = this.categories$.pipe(
     map((categories: Category[]) => this.sortByPosition(categories)),
@@ -78,6 +79,10 @@ export class StateService {
   public clearSelection(): void {
     this.currentCategoryId$.next(null);
     this.currentQuestionId$.next(null);
+  }
+
+  public toggleAlwaysShowAnswers(): void {
+    this.alwaysShowAnswers$.next(!this.alwaysShowAnswers$.getValue());
   }
 
   public selectNextQuestion(next: boolean = true): void {
