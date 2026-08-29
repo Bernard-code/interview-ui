@@ -4,7 +4,6 @@ import { combineLatest, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { StateService } from '../../services/state.service';
-import { isNil } from '../../utils/is-nil.util';
 
 @Component({
   selector: 'app-question-card',
@@ -19,30 +18,26 @@ export class QuestionCardComponent implements OnInit {
   private stateService = inject(StateService);
   private destroyRef = inject(DestroyRef);
 
-  public questionId: number;
-  public question: Question;
+  public questionId: number | null;
+  public question: Question | undefined;
   public questionIndex = 0;
   public questionCount = 0;
   public showAnswer = false;
 
   public ngOnInit(): void {
     combineLatest([
-      this.stateService.currentQuestionId$,
-      this.stateService.currentCategoryId$,
-      this.stateService.questions$,
+      this.stateService.selectedQuestion$,
+      this.stateService.questionsInCategory$,
     ]).pipe(
-      tap(([questionId, categoryId, questions]: [number, number, Question[]]) => {
+      tap(([question, inCategory]: [Question | undefined, Question[]]) => {
+        const questionId = question?.id ?? null;
         if (questionId !== this.questionId) {
           this.showAnswer = false;
         }
         this.questionId = questionId;
-        this.question = questions.find((question: Question) => question.id === questionId);
-
-        const inCategory = questions
-          .filter((question: Question) => Number(question.category) === Number(categoryId))
-          .sort((a, b) => a.position - b.position);
+        this.question = question;
         this.questionCount = inCategory.length;
-        const index = inCategory.findIndex((question: Question) => question.id === questionId);
+        const index = inCategory.findIndex((item: Question) => item.id === questionId);
         this.questionIndex = index === -1 ? 0 : index + 1;
       }),
       takeUntilDestroyed(this.destroyRef),
@@ -54,10 +49,6 @@ export class QuestionCardComponent implements OnInit {
   }
 
   public move(next: boolean = true): void {
-    const nextId = this.stateService.getNextOrPrevQuestionId(this.questionId, next);
-    if (isNil(nextId)) {
-      return;
-    }
-    this.stateService.currentQuestionId$.next(nextId);
+    this.stateService.selectNextQuestion(next);
   }
 }

@@ -1,16 +1,14 @@
 import { Component, DestroyRef, inject, OnInit } from '@angular/core';
-import { MainService } from '../../services/main.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CdkDragDrop, CdkDrag, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { combineLatest, filter, forkJoin, map, Observable, switchMap } from 'rxjs';
-import { Category } from '../../model/category.model';
+import { filter, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 import { MatButtonModule } from '@angular/material/button';
 import { PresentationItem } from '../../model/presentation-item.model';
 import { QuestionFormComponent } from '../question-form/question-form.component';
-import { ListItem } from '../../model/list-item.model';
 import { Question } from '../../model/question.model';
+import { Category } from '../../model/category.model';
 import { MatIconModule } from '@angular/material/icon';
 import { DeleteConfirmComponent } from '../delete-confirm/delete-confirm.component';
 import { isNil } from '../../utils/is-nil.util';
@@ -33,43 +31,16 @@ import { QuestionCardComponent } from '../question-card/question-card.component'
   ],
 })
 export class ListedViewComponent implements OnInit {
-  private mainService = inject(MainService);
   private destroyRef = inject(DestroyRef);
   private matDialog = inject(MatDialog);
   private stateService = inject(StateService);
 
-  public categories$: Observable<Category[]> = this.stateService.categories$.pipe(
-    map((categories: Category[]) =>
-      [...categories].sort((a, b) => a.position - b.position)
-    ),
-  );
+  public categories$ = this.stateService.sortedCategories$;
   public activeCategoryId$ = this.stateService.currentCategoryId$;
   public activeQuestionId$ = this.stateService.currentQuestionId$;
-
-  public filteredQuestions$: Observable<Question[]> = combineLatest([
-    this.stateService.questions$,
-    this.activeCategoryId$,
-  ]).pipe(
-    map(([questions, categoryId]) =>
-      questions
-        .filter((item: Question) => Number(item.category) === Number(categoryId))
-        .sort((a, b) => a.position - b.position)
-    ),
-  );
-
-  public selectedCategory$: Observable<Category | undefined> = combineLatest([
-    this.categories$,
-    this.activeCategoryId$,
-  ]).pipe(
-    map(([categories, id]) => categories.find((category: Category) => category.id === id)),
-  );
-
-  public selectedQuestion$: Observable<Question | undefined> = combineLatest([
-    this.stateService.questions$,
-    this.activeQuestionId$,
-  ]).pipe(
-    map(([questions, id]) => questions.find((question: Question) => question.id === id)),
-  );
+  public filteredQuestions$ = this.stateService.questionsInCategory$;
+  public selectedCategory$ = this.stateService.selectedCategory$;
+  public selectedQuestion$ = this.stateService.selectedQuestion$;
 
   protected readonly PresentationItem = PresentationItem;
   protected readonly isNil = isNil;
@@ -81,14 +52,6 @@ export class ListedViewComponent implements OnInit {
   }
 
   public openEditModal(id?: number, type: PresentationItem = PresentationItem.Category): void {
-    if (type === PresentationItem.Question) {
-      const categoryId = this.activeCategoryId$.getValue();
-      const questions = this.stateService.questions$.getValue()
-        .filter((item: Question) => Number(item.category) === Number(categoryId))
-        .sort((a, b) => a.position - b.position);
-      this.stateService.highestPosition = questions[questions.length - 1]?.position ?? 0;
-    }
-
     const modal = type === PresentationItem.Question
       ? this.matDialog.open(QuestionFormComponent, {
           width: '640px',
@@ -108,94 +71,45 @@ export class ListedViewComponent implements OnInit {
       filter(Boolean),
       switchMap((data: Question | Category) =>
         type === PresentationItem.Question
-          ? isNil(id)
-            ? this.mainService.createQuestion(data as Question)
-            : this.mainService.editQuestion(id, data as Question)
-          : isNil(id)
-            ? this.mainService.createCategory(data as Category)
-            : this.mainService.editCategory(id, data as Category)
+          ? this.stateService.saveQuestion(data as Question, id)
+          : this.stateService.saveCategory(data as Category, id)
       ),
-      switchMap(() => this.stateService.loadData()),
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 
   public reorderQuestions(event: CdkDragDrop<Question[]>): void {
-    this.persistReorder(
-      event,
-      (updates: Question[]) => {
-        const updatedById = new Map(updates.map((item: Question) => [item.id, item]));
-        this.stateService.questions$.next(
-          this.stateService.questions$.getValue().map((question: Question) =>
-            updatedById.get(question.id) ?? question
-          ),
-        );
-      },
-      (question: Question) => this.mainService.editQuestion(question.id, question),
-    );
-  }
-
-  public reorderCategories(event: CdkDragDrop<Category[]>): void {
-    this.persistReorder(
-      event,
-      (updates: Category[]) => {
-        const updatedById = new Map(updates.map((item: Category) => [item.id, item]));
-        this.stateService.categories$.next(
-          this.stateService.categories$.getValue().map((category: Category) =>
-            updatedById.get(category.id) ?? category
-          ),
-        );
-      },
-      (category: Category) => this.mainService.editCategory(category.id, category),
-    );
-  }
-
-  private persistReorder<T extends ListItem>(
-    event: CdkDragDrop<T[]>,
-    applyLocal: (updates: T[]) => void,
-    save: (item: T) => Observable<unknown>,
-  ): void {
     if (event.previousIndex === event.currentIndex) {
       return;
     }
-
-    const original = event.container.data ?? [];
-    const reordered = [...original];
+    const reordered = [...(event.container.data ?? [])];
     moveItemInArray(reordered, event.previousIndex, event.currentIndex);
+    this.stateService.reorderQuestions(reordered).pipe(
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
+  }
 
-    const updates = reordered
-      .map((item: T, index: number) => ({ ...item, position: index + 1 }))
-      .filter((item: T) => {
-        const previous = original.find((entry: T) => entry.id === item.id);
-        return previous?.position !== item.position;
-      });
-
-    if (!updates.length) {
+  public reorderCategories(event: CdkDragDrop<Category[]>): void {
+    if (event.previousIndex === event.currentIndex) {
       return;
     }
-
-    applyLocal(updates);
-    forkJoin(updates.map((item: T) => save(item))).pipe(
-      switchMap(() => this.stateService.loadData()),
+    const reordered = [...(event.container.data ?? [])];
+    moveItemInArray(reordered, event.previousIndex, event.currentIndex);
+    this.stateService.reorderCategories(reordered).pipe(
       takeUntilDestroyed(this.destroyRef),
     ).subscribe();
   }
 
   public openItem(id: number, type: PresentationItem): void {
     if (type === PresentationItem.Category) {
-      this.stateService.currentCategoryId$.next(id);
-      const firstQuestion = this.stateService.questions$.getValue()
-        .filter((item: Question) => Number(item.category) === id)
-        .sort((a, b) => a.position - b.position)[0];
-      this.stateService.currentQuestionId$.next(firstQuestion?.id ?? null);
+      this.stateService.selectCategory(id);
       return;
     }
-    this.stateService.currentQuestionId$.next(id);
+    this.stateService.selectQuestion(id);
   }
 
   public clearSelection(): void {
-    this.stateService.currentCategoryId$.next(null);
-    this.stateService.currentQuestionId$.next(null);
+    this.stateService.clearSelection();
   }
 
   public deleteItem(
@@ -210,23 +124,14 @@ export class ListedViewComponent implements OnInit {
       data: { name },
       panelClass: 'app-dialog',
       backdropClass: 'app-dialog-backdrop',
-    })
-      .afterClosed().pipe(
-        filter(Boolean),
-        switchMap(() =>
-          type === PresentationItem.Question
-            ? this.mainService.deleteQuestion(id)
-            : this.mainService.deleteCategory(id)
-        ),
-        switchMap(() => this.stateService.loadData()),
-        takeUntilDestroyed(this.destroyRef),
-      ).subscribe(() => {
-        if (type === PresentationItem.Category && this.activeCategoryId$.getValue() === id) {
-          this.clearSelection();
-        }
-        if (type === PresentationItem.Question && this.activeQuestionId$.getValue() === id) {
-          this.stateService.currentQuestionId$.next(null);
-        }
-      });
+    }).afterClosed().pipe(
+      filter(Boolean),
+      switchMap(() =>
+        type === PresentationItem.Question
+          ? this.stateService.deleteQuestion(id)
+          : this.stateService.deleteCategory(id)
+      ),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 }

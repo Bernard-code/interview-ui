@@ -3,10 +3,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { Category, CategoryForm } from '../../model/category.model';
-import { Observable, tap } from 'rxjs';
 import { isNil } from '../../utils/is-nil.util';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EditModalBase } from '../../utils/edit-modal.base';
+import { StateService } from '../../services/state.service';
 
 @Component({
   selector: 'app-category-form',
@@ -19,28 +18,20 @@ import { EditModalBase } from '../../utils/edit-modal.base';
 })
 export class CategoryFormComponent extends EditModalBase implements OnInit {
   private dialogRef: MatDialogRef<CategoryFormComponent> = inject(MatDialogRef);
+  private stateService = inject(StateService);
 
   public categoryForm: FormGroup<CategoryForm>;
   public isEdit = false;
 
   public ngOnInit(): void {
     this.isEdit = !isNil(this.dialogData?.id);
+    const category: Category | undefined = this.isEdit
+      ? this.stateService.getCategory(this.dialogData.id)
+      : undefined;
     this.categoryForm = new FormGroup({
-      name: new FormControl<string>('', Validators.required),
-      position: new FormControl<number>(null),
+      name: new FormControl<string>(category?.name ?? '', Validators.required),
+      position: new FormControl<number>(category?.position ?? this.stateService.nextCategoryPosition()),
     });
-    if (this.isEdit) {
-      this.fillEditForm().subscribe();
-    }
-  }
-
-  public fillEditForm(): Observable<Category> {
-    return this.mainService.getCategoryById(this.dialogData.id).pipe(
-      tap((category: Category) => {
-        this.categoryForm.patchValue(category);
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    );
   }
 
   public submitForm(): void {

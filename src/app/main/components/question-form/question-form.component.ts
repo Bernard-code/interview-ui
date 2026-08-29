@@ -2,10 +2,8 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
-import { Question, QuestionForm } from '../../model/question.model';
+import { QuestionForm } from '../../model/question.model';
 import { Category } from '../../model/category.model';
-import { Observable, tap } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { isNil } from '../../utils/is-nil.util';
 import { EditModalBase } from '../../utils/edit-modal.base';
 import { StateService } from '../../services/state.service';
@@ -42,38 +40,23 @@ export class QuestionFormComponent extends EditModalBase implements OnInit {
 
   public ngOnInit(): void {
     this.isEdit = !isNil(this.dialogData?.id);
+    this.categories = this.stateService.getSortedCategories();
     this.createForm();
-    this.loadCategories().subscribe();
-    if (this.isEdit) {
-      this.fillEditForm().subscribe();
-    }
   }
 
   public createForm(): void {
+    const question = this.isEdit
+      ? this.stateService.getQuestion(this.dialogData.id)
+      : undefined;
     this.questionForm = new FormGroup({
-      name: new FormControl<string>('', Validators.required),
-      answer: new FormControl<string>(''),
-      position: new FormControl<number>(this.stateService.highestPosition + 1),
-      category: new FormControl<number>(this.stateService.currentCategoryId$.getValue(), Validators.required),
+      name: new FormControl<string>(question?.name ?? '', Validators.required),
+      answer: new FormControl<string>(question?.answer ?? ''),
+      position: new FormControl<number>(question?.position ?? this.stateService.highestPosition + 1),
+      category: new FormControl<number>(
+        question?.category ?? this.stateService.currentCategoryId$.getValue(),
+        Validators.required,
+      ),
     });
-  }
-
-  public loadCategories(): Observable<Category[]> {
-    return this.mainService.getCategories().pipe(
-      tap((categories: Category[]) => {
-        this.categories = categories.sort((a, b) => a.position - b.position);
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    );
-  }
-
-  public fillEditForm(): Observable<Question> {
-    return this.mainService.getQuestionById(this.dialogData.id).pipe(
-      tap((question: Question) => {
-        this.questionForm.patchValue(question);
-      }),
-      takeUntilDestroyed(this.destroyRef)
-    );
   }
 
   public override pressEnterSubmit(target?: EventTarget): void {
