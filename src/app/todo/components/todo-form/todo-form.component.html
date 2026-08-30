@@ -1,0 +1,40 @@
+<form [formGroup]="todoForm" class="form" (ngSubmit)="submitForm()">
+  <header class="form-head">
+    <p class="kicker">{{ title }}</p>
+    <button type="button" class="icon-btn" (click)="close()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <label class="field">
+    <span>{{ isSeparator ? 'Label' : 'Text' }}</span>
+    <input
+      formControlName="text"
+      type="text"
+      [placeholder]="isSeparator ? 'Optional section name' : 'What needs to be done?'"
+      autocomplete="off"
+      autofocus
+    >
+  </label>
+
+  @if (!isSeparator) {
+    <label class="field">
+      <span>Status</span>
+      <select formControlName="status">
+        @for (status of statuses; track status.value) {
+          <option [value]="status.value">{{ status.label }}</option>
+        }
+      </select>
+    </label>
+  }
+
+  <div class="actions">
+    <button type="button" class="chip-btn" (click)="close()">Cancel</button>
+    <button
+      type="submit"
+      class="chip-btn primary"
+      [class.active]="isSeparator || todoForm.valid"
+      [disabled]="!isSeparator && !todoForm.valid"
+    >Save</button>
+  </div>
+</form>

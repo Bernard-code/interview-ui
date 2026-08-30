@@ -1,1 +1,116 @@
-<div class="container"></div>
+<div class="page">
+  <header class="head">
+    <h1>ToDo</h1>
+  </header>
+
+  <div class="board" cdkDropListGroup [class.done-collapsed]="doneCollapsed">
+    @for (section of sections; track section.status) {
+      <section
+        class="section"
+        [class.collapsed]="isDoneCollapsed(section)"
+        [attr.data-status]="section.status"
+      >
+        <h2 class="section-head">
+          <mat-icon class="status-icon">{{ section.icon }}</mat-icon>
+          <span class="label">{{ section.label }}</span>
+          <span class="count">{{ taskCount(section) }}</span>
+          <span class="head-actions">
+            @if (section.status === TodoStatus.TODO) {
+              <button type="button" class="toolbar-btn" (click)="openCreateModal(TodoStatus.TODO)">
+                <mat-icon>add</mat-icon>
+                New todo
+              </button>
+              <button
+                type="button"
+                class="icon-btn toolbar-plus"
+                (click)="openCreateModal(TodoStatus.TODO, true)"
+                aria-label="Add separator"
+                title="Add separator"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="openCreateModal(section.status)"
+                [attr.aria-label]="'Add ' + section.label + ' item'"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+            @if (section.status === TodoStatus.DONE) {
+              <button
+                type="button"
+                class="icon-btn"
+                (click)="toggleDone()"
+                [attr.aria-expanded]="!doneCollapsed"
+                [attr.aria-label]="doneCollapsed ? 'Expand done' : 'Collapse done'"
+              >
+                <mat-icon>{{ doneCollapsed ? 'chevron_left' : 'expand_more' }}</mat-icon>
+              </button>
+            }
+          </span>
+        </h2>
+
+        <div
+          class="list"
+          cdkDropList
+          [cdkDropListData]="section.items"
+          [cdkDropListEnterPredicate]="allowEnter"
+          (cdkDropListDropped)="drop($event, section)"
+        >
+          @if (isDoneCollapsed(section)) {
+            <p class="empty">Drop</p>
+          } @else {
+            @for (item of section.items; track item.id; let index = $index) {
+              @if (item.separator) {
+                <div class="separator" cdkDrag [cdkDragData]="item" (dblclick)="openEditModal(item)">
+                  <mat-icon class="handle">drag_indicator</mat-icon>
+                  @if (item.text) {
+                    <span class="separator-label">{{ item.text }}</span>
+                  }
+                  <button
+                    type="button"
+                    class="item-del"
+                    aria-label="Delete separator"
+                    (click)="confirmDelete($event, item)"
+                    (dblclick)="$event.stopPropagation()"
+                    (mousedown)="$event.stopPropagation()"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              } @else {
+                <article
+                  class="item"
+                  cdkDrag
+                  [cdkDragData]="item"
+                  [class.done]="item.status === TodoStatus.DONE"
+                  [class.in-progress]="item.status === TodoStatus.IN_PROGRESS"
+                  (dblclick)="openEditModal(item)"
+                >
+                  <mat-icon class="handle">drag_indicator</mat-icon>
+                  <span class="position">{{ taskNumber(section, index) }}</span>
+                  <p class="text">{{ item.text }}</p>
+                  <button
+                    type="button"
+                    class="item-del"
+                    aria-label="Delete todo"
+                    (click)="confirmDelete($event, item)"
+                    (dblclick)="$event.stopPropagation()"
+                    (mousedown)="$event.stopPropagation()"
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </article>
+              }
+            } @empty {
+              <p class="empty">Drop here</p>
+            }
+          }
+        </div>
+      </section>
+    }
+  </div>
+</div>
