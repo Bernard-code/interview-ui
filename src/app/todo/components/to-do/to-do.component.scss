@@ -1,5 +1,11 @@
 @import '../../../styles/variables';
 
+:host {
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
+
 .container {
   max-width: 720px;
   padding: 32px 28px;
