@@ -127,39 +127,6 @@
 
 .text-editor {
   display: block;
-  color: $font-color-1;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: none;
-
-  ::ng-deep {
-    .angular-editor-toolbar {
-      display: none;
-    }
-
-    .angular-editor-wrapper,
-    .angular-editor-textarea {
-      min-height: 200px !important;
-      border: 1px solid $border-subtle !important;
-      border-radius: 8px !important;
-      background: $color-bg-3 !important;
-      color: $font-color-1 !important;
-      box-shadow: none !important;
-    }
-
-    .angular-editor-textarea {
-      padding: 10px 12px !important;
-
-      &:focus {
-        border-color: $accent !important;
-        outline: none !important;
-      }
-    }
-
-    .angular-editor-placeholder {
-      color: $font-color-4 !important;
-    }
-  }
 }
 
 .actions {

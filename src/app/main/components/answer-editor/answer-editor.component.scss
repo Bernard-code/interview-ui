@@ -1,0 +1,37 @@
+@import '../../../styles/variables';
+
+:host {
+  display: block;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.surface {
+  min-height: 200px;
+  padding: 10px 12px;
+  border: 1px solid $border-subtle;
+  border-radius: 8px;
+  background: $color-bg-3;
+  color: $font-color-1;
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  tab-size: 4;
+  outline: none;
+  @include active-element-transition;
+
+  &:hover {
+    border-color: rgba(61, 214, 140, 0.4);
+  }
+
+  &:focus {
+    border-color: $accent;
+  }
+
+  &:empty::before {
+    content: attr(data-placeholder);
+    color: $font-color-4;
+  }
+}

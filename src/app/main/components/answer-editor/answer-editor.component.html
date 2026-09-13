@@ -1,0 +1,11 @@
+<div
+  #surface
+  class="surface"
+  contenteditable="true"
+  role="textbox"
+  aria-multiline="true"
+  data-placeholder="Write the answer…"
+  (input)="onInput()"
+  (keydown)="onKeydown($event)"
+  (blur)="markTouched()"
+></div>

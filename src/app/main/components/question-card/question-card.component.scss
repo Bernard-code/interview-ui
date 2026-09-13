@@ -179,6 +179,8 @@
   color: $font-color-2;
   font-size: 15px;
   line-height: 1.65;
+  white-space: pre-wrap;
+  tab-size: 4;
 
   ::ng-deep {
     p {

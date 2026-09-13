@@ -7,7 +7,7 @@ import { Category } from '../../model/category.model';
 import { isNil } from '../../utils/is-nil.util';
 import { EditModalBase } from '../../utils/edit-modal.base';
 import { StateService } from '../../services/state.service';
-import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor';
+import { AnswerEditorComponent } from '../answer-editor/answer-editor.component';
 
 @Component({
   selector: 'app-question-form',
@@ -16,7 +16,7 @@ import { AngularEditorConfig, AngularEditorModule } from '@kolkov/angular-editor
   imports: [
     ReactiveFormsModule,
     MatIconModule,
-    AngularEditorModule,
+    AnswerEditorComponent,
   ],
 })
 export class QuestionFormComponent extends EditModalBase implements OnInit {
@@ -26,17 +26,6 @@ export class QuestionFormComponent extends EditModalBase implements OnInit {
   public questionForm: FormGroup<QuestionForm>;
   public categories: Category[] = [];
   public isEdit = false;
-  public editorConfig: AngularEditorConfig = {
-    editable: true,
-    spellcheck: false,
-    height: '200px',
-    minHeight: '200px',
-    showToolbar: false,
-    placeholder: 'Write the answer…',
-    fonts: [
-      { class: 'Inter', name: 'Inter' },
-    ],
-  };
 
   public ngOnInit(): void {
     this.isEdit = !isNil(this.dialogData?.id);

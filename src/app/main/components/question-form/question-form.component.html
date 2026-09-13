@@ -13,16 +13,12 @@
 
   <label class="field">
     <span>Answer</span>
-    <angular-editor
-      [config]="editorConfig"
+    <app-answer-editor
       formControlName="answer"
       class="text-editor"
-    ></angular-editor>
+    ></app-answer-editor>
     <p class="hint">
-      Code blocks: wrap in markdown fences, e.g.<br>
-      <code>```javascript</code><br>
-      <code>const x = 1;</code><br>
-      <code>```</code>
+      Enter and Tab are kept. Emoji: system picker (Win + . or Ctrl + Cmd + Space).
     </p>
   </label>
 
