@@ -1,12 +1,17 @@
 @import '../../../styles/variables';
 
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
 }
 
 .form {
   display: flex;
   flex-direction: column;
+  flex: 1;
+  min-height: 0;
   gap: 16px;
   padding: 24px 28px 28px;
 }
@@ -125,8 +130,22 @@
   }
 }
 
+.form-head,
+.row,
+.actions,
+.field:not(.answer-field) {
+  flex-shrink: 0;
+}
+
+.field.answer-field {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 .text-editor {
-  display: block;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .actions {
@@ -173,5 +192,9 @@
 
   .form {
     padding: 18px 16px 20px;
+  }
+
+  .field.answer-field {
+    min-height: 140px;
   }
 }

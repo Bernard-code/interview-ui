@@ -55,10 +55,12 @@ export class ListedViewComponent implements OnInit {
   public openEditModal(id?: number, type: PresentationItem = PresentationItem.Category): void {
     const modal = type === PresentationItem.Question
       ? this.matDialog.open(QuestionFormComponent, {
-          width: '640px',
-          maxWidth: '92vw',
+          width: '880px',
+          maxWidth: 'calc(100vw - 30px)',
+          height: 'calc(100vh - 30px)',
+          maxHeight: 'calc(100vh - 30px)',
           data: { id },
-          panelClass: 'app-dialog',
+          panelClass: ['app-dialog', 'app-dialog-question'],
           backdropClass: 'app-dialog-backdrop',
         })
       : this.matDialog.open(CategoryFormComponent, {
