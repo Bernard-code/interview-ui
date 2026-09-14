@@ -12,6 +12,7 @@ import { isNil } from '../utils/is-nil.util';
 export class StateService {
   private static readonly LAST_CATEGORY_KEY = 'interview.lastCategoryId';
   private static readonly LAST_QUESTION_KEY = 'interview.lastQuestionId';
+  private static readonly ALWAYS_SHOW_ANSWERS_KEY = 'interview.alwaysShowAnswers';
 
   private mainService = inject(MainService);
 
@@ -19,7 +20,7 @@ export class StateService {
   public questions$ = new BehaviorSubject<Question[]>([]);
   public currentCategoryId$ = new BehaviorSubject<number | null>(null);
   public currentQuestionId$ = new BehaviorSubject<number | null>(null);
-  public alwaysShowAnswers$ = new BehaviorSubject<boolean>(false);
+  public alwaysShowAnswers$ = new BehaviorSubject<boolean>(this.readAlwaysShowAnswers());
 
   public sortedCategories$: Observable<Category[]> = this.categories$.pipe(
     map((categories: Category[]) => this.sortByPosition(categories)),
@@ -90,7 +91,9 @@ export class StateService {
   }
 
   public toggleAlwaysShowAnswers(): void {
-    this.alwaysShowAnswers$.next(!this.alwaysShowAnswers$.getValue());
+    const enabled = !this.alwaysShowAnswers$.getValue();
+    this.alwaysShowAnswers$.next(enabled);
+    this.writeAlwaysShowAnswers(enabled);
   }
 
   public recordAnswerResult(questionId: number, mark: AnswerMark): void {
@@ -330,5 +333,19 @@ export class StateService {
     }
 
     this.persistSelection();
+  }
+
+  private readAlwaysShowAnswers(): boolean {
+    if (typeof localStorage === 'undefined') {
+      return false;
+    }
+    return localStorage.getItem(StateService.ALWAYS_SHOW_ANSWERS_KEY) === 'true';
+  }
+
+  private writeAlwaysShowAnswers(enabled: boolean): void {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+    localStorage.setItem(StateService.ALWAYS_SHOW_ANSWERS_KEY, String(enabled));
   }
 }

@@ -93,4 +93,13 @@ describe('StateService', () => {
     expect(localStorage.getItem('interview.lastCategoryId')).toBeNull();
     expect(localStorage.getItem('interview.lastQuestionId')).toBeNull();
   });
+
+  it('persists always show answers to localStorage', () => {
+    expect(service.alwaysShowAnswers$.getValue()).toBe(false);
+    service.toggleAlwaysShowAnswers();
+    expect(service.alwaysShowAnswers$.getValue()).toBe(true);
+    expect(localStorage.getItem('interview.alwaysShowAnswers')).toBe('true');
+    service.toggleAlwaysShowAnswers();
+    expect(localStorage.getItem('interview.alwaysShowAnswers')).toBe('false');
+  });
 });
