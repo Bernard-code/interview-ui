@@ -61,28 +61,54 @@
 
   <div class="workspace">
     <aside class="question-pane">
-      <div class="section-head">
-        <span>Questions</span>
-        <div class="head-actions">
-          <button
-            type="button"
-            class="mode-toggle"
-            [class.on]="focusMode"
-            (click)="toggleFocusMode()"
-            [attr.aria-pressed]="focusMode"
-          >
-            <span class="switch" [class.on]="focusMode" aria-hidden="true"></span>
-            Focus
-          </button>
-          <button
-            mat-icon-button
-            type="button"
-            aria-label="Add question"
-            [disabled]="isNil(categoryId)"
-            (click)="openEditModal(undefined, PresentationItem.Question)"
-          >
-            <mat-icon>add</mat-icon>
-          </button>
+      <div class="pane-head">
+        <div class="section-head">
+          <div class="head-title">
+            <span>Questions</span>
+            <button
+              type="button"
+              class="search-btn"
+              [class.on]="searchOpen"
+              (click)="toggleSearch()"
+              [attr.aria-expanded]="searchOpen"
+              aria-label="Search questions"
+            >
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+          <div class="head-actions">
+            <button
+              type="button"
+              class="mode-toggle"
+              [class.on]="focusMode"
+              (click)="toggleFocusMode()"
+              [attr.aria-pressed]="focusMode"
+            >
+              <span class="switch" [class.on]="focusMode" aria-hidden="true"></span>
+              Focus
+            </button>
+            <button
+              mat-icon-button
+              type="button"
+              aria-label="Add question"
+              [disabled]="isNil(categoryId)"
+              (click)="openEditModal(undefined, PresentationItem.Question)"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="q-search-wrap" [class.open]="searchOpen">
+          <div class="q-search-inner">
+            <input
+              #searchInput
+              type="search"
+              class="q-search"
+              placeholder="Search by title…"
+              [value]="searchQuery"
+              (input)="onSearchInput($event)"
+            >
+          </div>
         </div>
       </div>
 
@@ -94,6 +120,7 @@
             class="q-list"
             cdkDropList
             [cdkDropListData]="questions ?? []"
+            [cdkDropListDisabled]="!!searchQuery.trim()"
             (cdkDropListDropped)="reorderQuestions($event)"
           >
             @for (item of questions; track item.id; let index = $index) {
@@ -117,7 +144,7 @@
                 >close</mat-icon>
               </div>
             } @empty {
-              <p class="empty">No questions yet</p>
+              <p class="empty">{{ searchQuery.trim() ? 'No matching questions' : 'No questions yet' }}</p>
             }
           </div>
         }

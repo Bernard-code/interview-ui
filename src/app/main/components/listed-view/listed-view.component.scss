@@ -232,9 +232,87 @@
   padding: 8px 10px 0;
   border-right: 1px solid $border-subtle;
   background: $color-bg-2;
+}
 
-  .section-head {
-    flex-shrink: 0;
+.pane-head {
+  flex-shrink: 0;
+}
+
+.head-title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.search-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: $font-color-4;
+  cursor: pointer;
+  @include active-element-transition;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover,
+  &.on {
+    color: $font-color-1;
+    background: rgba(255, 255, 255, 0.06);
+  }
+}
+
+.q-search-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows .18s ease;
+}
+
+.q-search-wrap.open {
+  grid-template-rows: 1fr;
+  margin-top: 6px;
+}
+
+.q-search-inner {
+  overflow: hidden;
+}
+
+.q-search {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+  padding: 7px 10px;
+  border: 1px solid $border-subtle;
+  border-radius: 8px;
+  background: $color-bg-3;
+  color: $font-color-1;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  outline: none;
+  @include active-element-transition;
+
+  &::placeholder {
+    color: $font-color-4;
+  }
+
+  &:hover {
+    border-color: rgba(61, 214, 140, 0.4);
+  }
+
+  &:focus {
+    border-color: $accent;
   }
 }
 

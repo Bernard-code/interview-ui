@@ -1,7 +1,7 @@
-import { Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, OnInit, viewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CdkDragDrop, CdkDrag, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { filter, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, filter, map, switchMap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CategoryFormComponent } from '../category-form/category-form.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -38,10 +38,25 @@ export class ListedViewComponent implements OnInit {
   public categories$ = this.stateService.sortedCategories$;
   public activeCategoryId$ = this.stateService.currentCategoryId$;
   public activeQuestionId$ = this.stateService.currentQuestionId$;
-  public filteredQuestions$ = this.stateService.questionsInCategory$;
   public selectedCategory$ = this.stateService.selectedCategory$;
   public selectedQuestion$ = this.stateService.selectedQuestion$;
   public focusMode$ = this.stateService.focusMode$;
+  public searchOpen = false;
+  public searchQuery = '';
+  private searchQuery$ = new BehaviorSubject<string>('');
+  private searchInput = viewChild<ElementRef<HTMLInputElement>>('searchInput');
+  public filteredQuestions$ = combineLatest([
+    this.stateService.questionsInCategory$,
+    this.searchQuery$,
+  ]).pipe(
+    map(([questions, query]: [Question[], string]) => {
+      const phrase = query.trim().toLowerCase();
+      if (!phrase) {
+        return questions;
+      }
+      return questions.filter((question: Question) => question.name.toLowerCase().includes(phrase));
+    }),
+  );
 
   protected readonly PresentationItem = PresentationItem;
   protected readonly isNil = isNil;
@@ -117,6 +132,22 @@ export class ListedViewComponent implements OnInit {
 
   public toggleFocusMode(): void {
     this.stateService.toggleFocusMode();
+  }
+
+  public toggleSearch(): void {
+    this.searchOpen = !this.searchOpen;
+    if (!this.searchOpen) {
+      this.searchQuery = '';
+      this.searchQuery$.next('');
+      return;
+    }
+    setTimeout(() => this.searchInput()?.nativeElement.focus(), 60);
+  }
+
+  public onSearchInput(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this.searchQuery = value;
+    this.searchQuery$.next(value);
   }
 
   public deleteItem(
