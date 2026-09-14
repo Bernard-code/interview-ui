@@ -13,6 +13,7 @@ export class StateService {
   private static readonly LAST_CATEGORY_KEY = 'interview.lastCategoryId';
   private static readonly LAST_QUESTION_KEY = 'interview.lastQuestionId';
   private static readonly ALWAYS_SHOW_ANSWERS_KEY = 'interview.alwaysShowAnswers';
+  private static readonly FOCUS_MODE_KEY = 'interview.focusMode';
 
   private mainService = inject(MainService);
 
@@ -21,6 +22,7 @@ export class StateService {
   public currentCategoryId$ = new BehaviorSubject<number | null>(null);
   public currentQuestionId$ = new BehaviorSubject<number | null>(null);
   public alwaysShowAnswers$ = new BehaviorSubject<boolean>(this.readAlwaysShowAnswers());
+  public focusMode$ = new BehaviorSubject<boolean>(this.readFocusMode());
 
   public sortedCategories$: Observable<Category[]> = this.categories$.pipe(
     map((categories: Category[]) => this.sortByPosition(categories)),
@@ -94,6 +96,12 @@ export class StateService {
     const enabled = !this.alwaysShowAnswers$.getValue();
     this.alwaysShowAnswers$.next(enabled);
     this.writeAlwaysShowAnswers(enabled);
+  }
+
+  public toggleFocusMode(): void {
+    const enabled = !this.focusMode$.getValue();
+    this.focusMode$.next(enabled);
+    this.writeFocusMode(enabled);
   }
 
   public recordAnswerResult(questionId: number, mark: AnswerMark): void {
@@ -347,5 +355,19 @@ export class StateService {
       return;
     }
     localStorage.setItem(StateService.ALWAYS_SHOW_ANSWERS_KEY, String(enabled));
+  }
+
+  private readFocusMode(): boolean {
+    if (typeof localStorage === 'undefined') {
+      return false;
+    }
+    return localStorage.getItem(StateService.FOCUS_MODE_KEY) === 'true';
+  }
+
+  private writeFocusMode(enabled: boolean): void {
+    if (typeof localStorage === 'undefined') {
+      return;
+    }
+    localStorage.setItem(StateService.FOCUS_MODE_KEY, String(enabled));
   }
 }

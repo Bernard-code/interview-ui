@@ -41,7 +41,7 @@ export class ListedViewComponent implements OnInit {
   public filteredQuestions$ = this.stateService.questionsInCategory$;
   public selectedCategory$ = this.stateService.selectedCategory$;
   public selectedQuestion$ = this.stateService.selectedQuestion$;
-  public alwaysShowAnswers$ = this.stateService.alwaysShowAnswers$;
+  public focusMode$ = this.stateService.focusMode$;
 
   protected readonly PresentationItem = PresentationItem;
   protected readonly isNil = isNil;
@@ -115,8 +115,8 @@ export class ListedViewComponent implements OnInit {
     this.stateService.clearSelection();
   }
 
-  public toggleAlwaysShowAnswers(): void {
-    this.stateService.toggleAlwaysShowAnswers();
+  public toggleFocusMode(): void {
+    this.stateService.toggleFocusMode();
   }
 
   public deleteItem(

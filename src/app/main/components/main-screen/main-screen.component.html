@@ -1,3 +1,5 @@
+@let alwaysShowAnswers = alwaysShowAnswers$ | async;
+
 <div class="shell">
   <mat-toolbar class="topbar">
     <a class="brand" routerLink="/questions">
@@ -17,6 +19,16 @@
         </a>
       }
     </nav>
+    <button
+      type="button"
+      class="mode-toggle"
+      [class.on]="alwaysShowAnswers"
+      (click)="toggleAlwaysShowAnswers()"
+      [attr.aria-pressed]="alwaysShowAnswers"
+    >
+      <span class="switch" [class.on]="alwaysShowAnswers" aria-hidden="true"></span>
+      Always show answers
+    </button>
   </mat-toolbar>
   <main class="content">
     <router-outlet></router-outlet>
