@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, output, signal } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Question } from '../../model/question.model';
 import { combineLatest, tap } from 'rxjs';
@@ -29,6 +29,7 @@ export class QuestionCardComponent implements OnInit {
   public questionCount = 0;
   public showAnswer = signal(false);
   public trustedAnswer = signal<SafeHtml>('');
+  public edit = output<number>();
   private alwaysShowAnswers = false;
   private lastAnswerHtml = '';
 
@@ -83,6 +84,14 @@ export class QuestionCardComponent implements OnInit {
       return;
     }
     this.stateService.resetAnswerScores(id);
+  }
+
+  public editQuestion(): void {
+    const id = this.question()?.id;
+    if (id == null) {
+      return;
+    }
+    this.edit.emit(id);
   }
 
   private async renderAnswer(html: string): Promise<void> {

@@ -10,6 +10,9 @@ import { isNil } from '../utils/is-nil.util';
   providedIn: 'root',
 })
 export class StateService {
+  private static readonly LAST_CATEGORY_KEY = 'interview.lastCategoryId';
+  private static readonly LAST_QUESTION_KEY = 'interview.lastQuestionId';
+
   private mainService = inject(MainService);
 
   public categories$ = new BehaviorSubject<Category[]>([]);
@@ -48,7 +51,9 @@ export class StateService {
   }
 
   public loadData(): Observable<[Category[], Question[]]> {
-    return forkJoin([this.loadCategories(), this.loadQuestions()]);
+    return forkJoin([this.loadCategories(), this.loadQuestions()]).pipe(
+      tap(() => this.restoreSelection()),
+    );
   }
 
   public loadCategories(): Observable<Category[]> {
@@ -70,15 +75,18 @@ export class StateService {
   public selectCategory(id: number): void {
     this.currentCategoryId$.next(id);
     this.currentQuestionId$.next(this.questionsInCategory(id)[0]?.id ?? null);
+    this.persistSelection();
   }
 
   public selectQuestion(id: number): void {
     this.currentQuestionId$.next(id);
+    this.persistSelection();
   }
 
   public clearSelection(): void {
     this.currentCategoryId$.next(null);
     this.currentQuestionId$.next(null);
+    this.persistSelection();
   }
 
   public toggleAlwaysShowAnswers(): void {
@@ -108,6 +116,7 @@ export class StateService {
     const nextId = this.getNextOrPrevQuestionId(this.currentQuestionId$.getValue(), next);
     if (!isNil(nextId)) {
       this.currentQuestionId$.next(nextId);
+      this.persistSelection();
     }
   }
 
@@ -148,6 +157,7 @@ export class StateService {
       tap(() => {
         if (this.currentQuestionId$.getValue() === id) {
           this.currentQuestionId$.next(null);
+          this.persistSelection();
         }
       }),
       switchMap(() => this.loadData()),
@@ -276,5 +286,49 @@ export class StateService {
       positiveCount: Math.max(0, Number(question.positiveCount) || 0),
       negativeCount: Math.max(0, Number(question.negativeCount) || 0),
     };
+  }
+
+  private persistSelection(): void {
+    const categoryId = this.currentCategoryId$.getValue();
+    const questionId = this.currentQuestionId$.getValue();
+
+    if (isNil(categoryId)) {
+      localStorage.removeItem(StateService.LAST_CATEGORY_KEY);
+    } else {
+      localStorage.setItem(StateService.LAST_CATEGORY_KEY, String(categoryId));
+    }
+
+    if (isNil(questionId)) {
+      localStorage.removeItem(StateService.LAST_QUESTION_KEY);
+    } else {
+      localStorage.setItem(StateService.LAST_QUESTION_KEY, String(questionId));
+    }
+  }
+
+  private restoreSelection(): void {
+    const rawCategoryId = localStorage.getItem(StateService.LAST_CATEGORY_KEY);
+    if (!rawCategoryId) {
+      return;
+    }
+
+    const categoryId = Number(rawCategoryId);
+    if (!this.getCategory(categoryId)) {
+      this.clearSelection();
+      return;
+    }
+
+    this.currentCategoryId$.next(categoryId);
+
+    const rawQuestionId = localStorage.getItem(StateService.LAST_QUESTION_KEY);
+    const questionId = rawQuestionId ? Number(rawQuestionId) : null;
+    const question = !isNil(questionId) ? this.getQuestion(questionId) : undefined;
+
+    if (question && Number(question.category) === Number(categoryId)) {
+      this.currentQuestionId$.next(question.id);
+    } else {
+      this.currentQuestionId$.next(this.questionsInCategory(categoryId)[0]?.id ?? null);
+    }
+
+    this.persistSelection();
   }
 }

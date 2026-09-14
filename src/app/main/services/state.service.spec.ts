@@ -20,6 +20,7 @@ describe('StateService', () => {
   let http: HttpTestingController;
 
   beforeEach(() => {
+    localStorage.clear();
     TestBed.configureTestingModule({
       providers: [
         provideHttpClient(),
@@ -33,6 +34,7 @@ describe('StateService', () => {
 
   afterEach(() => {
     http.verify();
+    localStorage.clear();
   });
 
   it('should be created', () => {
@@ -63,5 +65,32 @@ describe('StateService', () => {
     expect(req.request.body.positiveCount).toBe(0);
     expect(req.request.body.negativeCount).toBe(0);
     req.flush({ ...question, positiveCount: 0, negativeCount: 0 });
+  });
+
+  it('restores last opened category and question from localStorage after load', () => {
+    localStorage.setItem('interview.lastCategoryId', '10');
+    localStorage.setItem('interview.lastQuestionId', '7');
+
+    service.loadData().subscribe();
+    http.expectOne((request) => request.method === 'GET' && request.url.includes('/categories'))
+      .flush([{ id: 10, name: 'JS', position: 1 }]);
+    http.expectOne((request) => request.method === 'GET' && request.url.includes('/questions'))
+      .flush([question]);
+
+    expect(service.currentCategoryId$.getValue()).toBe(10);
+    expect(service.currentQuestionId$.getValue()).toBe(7);
+  });
+
+  it('persists selection to localStorage when selecting category and question', () => {
+    service.categories$.next([{ id: 10, name: 'JS', position: 1 }]);
+    service.questions$.next([question]);
+
+    service.selectCategory(10);
+    expect(localStorage.getItem('interview.lastCategoryId')).toBe('10');
+    expect(localStorage.getItem('interview.lastQuestionId')).toBe('7');
+
+    service.clearSelection();
+    expect(localStorage.getItem('interview.lastCategoryId')).toBeNull();
+    expect(localStorage.getItem('interview.lastQuestionId')).toBeNull();
   });
 });

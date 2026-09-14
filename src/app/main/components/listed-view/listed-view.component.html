@@ -121,7 +121,7 @@
     </aside>
 
     <section class="detail-pane">
-      <app-question-card></app-question-card>
+      <app-question-card (edit)="openEditModal($event, PresentationItem.Question)"></app-question-card>
     </section>
   </div>
 </div>

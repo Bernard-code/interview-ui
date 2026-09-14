@@ -128,7 +128,8 @@
     color: $delete-red;
   }
 
-  &.reset:hover:not(:disabled) {
+  &.reset:hover:not(:disabled),
+  &.edit:hover {
     border-color: rgba(255, 255, 255, 0.2);
     color: $font-color-1;
   }
